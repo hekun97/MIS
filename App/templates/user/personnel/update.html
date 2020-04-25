@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>修改员工信息</title>
+
+    <!-- 导入bootstrap -->
+    {% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+    <!-- 路径导航开始 -->
+    <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
+        <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
+        <li><a href="{{ url_for('personnel_user.show_user')}}">个人基本信息</a></li>
+        <li class="active">修改个人基本信息展示</li>
+    </ol>
+    <hr>
+    <!-- 路径导航结束 -->
+    <div class="container-fluid">
+        <form class="form-inline" method="post">
+
+            <!-- 第一行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">员工姓名</label>
+                        <input type="text" name='username' class="form-control"
+                            value="{{ request.form['username'] or post['username'] }}">
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">员工性别</label>
+                        <div class="form-group">
+                            <select class="form-control" style="width: 196px;" name="sex">
+                                <option>{{post['sex']}}</option>
+                                {% if post['sex']== '女' %}
+                                <option>男</option>
+                                {% else %}
+                                <option>女</option>
+                                {% endif %}
+                            </select></div>
+                    </div>
+                </p>
+            </div>
+            <!-- 第二行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">你的邮箱</label>
+                        <input type="text" name="email" class="form-control"
+                            value="{{ request.form['email'] or post['email'] }}">
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">你的电话</label>
+                        <input type="text" name="tel" class="form-control"
+                            value="{{ request.form['tel'] or post['tel'] }}">
+                    </div>
+                </p>
+            </div>
+            <!-- 第三行 -->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputName2">出生日期</label>
+                        <input type="date"  class="form-control" name="birthday" value="{{ request.form['birthday'] or post['birthday'] }}"
+                            style="width: 196px;" />
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputName2">员工密码</label>
+                        <input type="password" class="form-control" name="password" placeholder="请输入密码">
+                    </div>
+                </p>
+            </div>
+
+            <!-- 错误信息 -->
+            {% for message in get_flashed_messages() %}
+            <div class="col-sm-offset-2 col-sm-10">{{message}}</div>
+            {% endfor%}
+            <!-- 提交和取消按钮 -->
+            <div class="col-md-offset-4 col-md-10">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button type="reset" class="btn btn-danger col-md-offset-1">取消</button>
+            </div>
+        </form>
+
+
+    </div>
+</body>
+
+</html>

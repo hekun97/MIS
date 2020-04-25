@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>员工信息</title>
+
+	<!-- 导入bootstrap -->
+	{% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+    <!-- 路径导航开始 -->
+    <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
+        <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
+        <li><a href="{{ url_for('personnel_user.show_user')}}">个人基本信息</a></li>
+        <li class="active">个人基本信息展示</li>
+    </ol>
+    <hr>
+    <!-- 路径导航结束 -->
+    <div class="container-fluid">
+        <form class="form-inline" method="post">
+            {% for post in posts %}
+            <!-- 第一行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group" style="width: 210px;">
+                        <label for="exampleInputEmail2">编号：</label>
+                        <nobr>{{ post['id'] }}</nobr>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">姓名:</label>
+                        <nobr>{{ post['username'] }}</nobr>
+                    </div>
+                </p>
+            </div>
+            <!-- 第二行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group" style="width: 210px;">
+                        <label for="exampleInputEmail2">性别：</label>
+                        <nobr>{{ post['sex'] }}</nobr>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">职位:</label>
+                        <nobr>{{ post['p_name'] }}</nobr>
+                    </div>
+                </p>
+            </div>
+            <!-- 第三行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group" style="width: 210px;">
+                        <label for="exampleInputEmail2">出生日期：</label>
+                        <nobr>{{ post['birthday'] }}</nobr>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">年龄:</label>
+                        <nobr>{{ post['age'] }}</nobr>
+                    </div>
+                </p>
+            </div>
+            <!-- 第四行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group" style="width: 210px;">
+                        <label for="exampleInputEmail2">入职日期：</label>
+                        <nobr>{{ post['work_begin_day'] }}</nobr>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">工龄：</label>
+                        <nobr>{{ post['work_age'] }}</nobr>
+                    </div>
+                </p>
+            </div>
+            <!-- 第五行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group" style="width: 210px;">
+                        <label for="exampleInputEmail2">邮箱：</label>
+                        <nobr>{{ post['email'] }}</nobr>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">电话:</label>
+                        <nobr>{{ post['tel'] }}</nobr>
+                    </div>
+                </p>
+            </div>
+            <!-- 第六行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group" style="width: 210px;">
+                        <label for="exampleInputEmail2">所属团队：</label>
+                        <nobr>{{ post['t_name'] }}</nobr>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">所属部门：</label>
+                        <nobr>{{ post['d_name'] }}</nobr>
+                    </div>
+                </p>
+            </div>
+            <!-- 第七行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group" style="width: 210px;">
+                        <label for="exampleInputEmail2">薪资：</label>
+                        <nobr>{{ post['money'] }}</nobr>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">权限：</label>
+                        <nobr>{{ post['level'] }}</nobr>
+                    </div>
+                </p>
+            </div>
+            <div class="col-sm-offset-4 col-sm-10">
+                <a class="btn btn-warning"  role="button" href="{{ url_for('personnel_user.update', id=post['id']) }}">修改</a>
+            </div>
+            {% endfor %}
+        </form>
+
+
+    </div>
+</body>
+
+</html>

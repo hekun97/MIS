@@ -1,0 +1,20 @@
+{% if g.user %}
+<div class="brand" style="padding-left: 37%;">
+    欢迎你，{{ g.user['username'] }}
+</div>
+<div class="brand">
+    <!-- 定义一个id为cg -->
+    <span id="cg">2016/12/21 上午12:00:00</span>
+    <script>
+        setInterval("cg.innerHTML=new Date().toLocaleString()", 1000);
+    </script>
+</div>
+{% if g.user['level']=='管理员' %}
+<div class="brand">
+    <a href="{{ url_for('system.user') }}">切换</a>
+</div>
+{% endif %}
+<div class="brand">
+    <a href="{{ url_for('auth.logout') }}">安全退出</a>
+</div>
+{% endif %}

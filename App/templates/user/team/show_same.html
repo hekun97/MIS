@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!-- 导入bootstrap -->
+    {% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+    <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
+        <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
+        <li><a href="{{ url_for('team_user.show_user_team_same')}}">团队信息</a></li>
+        <li class="active">我的团队信息</li>
+    </ol>
+    <hr>
+    <!-- 条件搜索开始 -->
+    <form class="form-inline col-md-offset-7" method="post">
+        <div class="form-group">
+            <select class="form-control" style="width: 150px;" name="search_name">
+                <option>按姓名搜索</option>
+                <option>按性别搜索</option>
+                <option>按职位搜索</option>
+            </select></div>
+        </div>
+        <div class="form-group">
+            <input type="text" name="name" class="form-control" placeholder="请按要求输入内容">
+        </div>
+        <button type="submit" class="btn btn-primary">搜索</button>
+    </form>
+    <!-- 条件搜索结束 -->
+    <p></p>
+    {% for post in d_posts %}
+    <div class="col-sm-offset-5 col-sm-4">
+        <h3>{{post['dp_name']}}
+            {% for post in t_posts %}
+            <small>{{post['team_name']}}</small>
+        </h3>
+    </div>
+            {% endfor %}
+    {% endfor %}
+    <div class="container">
+        <div class="row">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>邮箱</th>
+                        <th>电话</th>
+                        <th>职位</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in list %}
+                    <tr>
+                        <td>{{ post['id'] }}</td>
+                        <td>{{ post['username'] }}</td>
+                        <td>{{post['sex']}}</td>
+                        <td>{{post['email']}}</td>
+                        <td>{{post['tel']}}</td>
+                        <td>{{post['p_name']}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- 分页 -->
+            {% include 'page.html' ignore missing  %}
+            <!-- 分页 -->
+        </div>
+    </div>
+</body>
+
+</html>

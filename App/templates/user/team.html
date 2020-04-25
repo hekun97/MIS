@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<!-- 导入bootstrap -->
+	{% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+	<ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
+        <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
+        <li><a href="{{ url_for('team_user.show_user_team')}}">团队信息</a></li>
+        <li class="active">团队信息展示</li>
+      </ol>
+    <hr>
+	<form class="form-inline col-md-offset-9" method="post">
+		<div class="form-group">
+			<!-- 查找团队 -->
+			<input class="form-control col-md-6" type="text" name="team_name" placeholder="请输入团队名称">
+		</div>
+		<button type="submit" class="btn btn-primary">搜索</button>
+	</form>
+	</br>
+	<div class="container">
+		<div class="row">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>团队名称</th>
+						<th>团队描述</th>
+						<th>团队人数</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for post in list %}
+					<tr>
+						<td>{{ post['id'] }}</td>
+						<td>{{ post['team_name'] }}</td>
+						<td>{{ post['team_describe'] }}</td>
+						<td>{{ post['team_count'] }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<!-- 分页 -->
+			{% include 'page.html' ignore missing  %}
+			<!-- 分页 -->
+		</div>
+	</div>
+</body>
+
+</html>

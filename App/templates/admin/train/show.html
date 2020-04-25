@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<!-- 导入bootstrap -->
+	{% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+	<div style="padding: 20px;">
+		<h5>当前位置>培训管理>培训展示</h5>
+	</div>
+	<form class="form-horizontal" method="post">
+		<div class="form-group">
+			<div class="col-md-offset-9">
+				<!-- 模糊查找员工 -->
+                    <input class="form-control col-md-5" type="text" name="train_title" placeholder="请输入培训名称">
+                    <div class="col-md-3">
+						<button type="submit" class="btn btn-primary">搜索</button>
+                    </div>
+				</div>
+			</div>
+		</div>
+		<hr>
+	</form>
+	<div class="container">
+		<div class="row">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>培训名称</th>
+						<th>发起人</th>
+						<th>发起时间</th>
+						<th>已参加人数</th>
+						<th>操作</th>				
+					</tr>
+				</thead>
+				<tbody>
+					{% for post in posts %}
+					<tr>
+						<td>{{ post['id'] }}</td>
+						<td>{{ post['train_title'] }}</td>
+						<td>{{post['train_author']}}</td>
+						<td>{{post['create_time']}}</td>
+						<td>{{post['train_count']}}</td>								
+
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<div class="col-sm-offset-4 col-sm-4">
+				<ul class="pagination col-sm-offset-2">
+					<li><a href="#">&laquo;</a></li>
+					<li><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">4</a></li>
+					<li><a href="#">5</a></li>
+					<li><a href="#">&raquo;</a></li>
+				</ul>
+			</div>
+			<hr />
+		</div>
+	</div>
+</body>
+
+</html>

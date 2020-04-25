@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<!-- 导入bootstrap -->
+	{% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+	<!-- 路径导航开始 -->
+	<ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
+		<li><a href="{{ url_for('company.home')}} ">主页</a></li>
+		<li><a href="{{ url_for('team.show_team')}}">团队管理</a></li>
+		<li class="active">团队展示 </li>
+	</ol>
+	<hr>
+	<!-- 路径导航结束 -->
+	<form class="form-inline col-md-offset-9" method="post">
+		<div class="form-group">
+			<!-- 查找员工 -->
+			<input class="form-control col-md-5" type="text" name="team_name" placeholder="请输入团队名称">
+		</div>
+		<button type="submit" class="btn btn-primary">搜索</button>
+	</form>
+	</br>
+	<div class="container">
+		<div class="row">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>团队名称</th>
+						<th>团队描述</th>
+						<th>团队人数</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for post in list %}
+					<tr>
+						<td>{{ post['id'] }}</td>
+						<td>{{ post['team_name'] }}</td>
+						<td>{{ post['team_describe'] }}</td>
+						<td>{{ post['team_count'] }}</td>
+						<td>
+							<form action="{{ url_for('team.delete_team', id=post['id']) }}" method="post">
+								<a class="btn btn-warning"
+									href="{{ url_for('team.update_team', id=post['id']) }}">修改</a>
+								<input class="btn btn-danger" type="submit" value="删除"
+									onclick="return confirm('你确定删除该团队吗?');">
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<!-- 分页 -->
+			{% include 'page.html' ignore missing  %}
+			<!-- 分页 -->
+		</div>
+	</div>
+</body>
+
+</html>

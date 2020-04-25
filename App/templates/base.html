@@ -1,0 +1,24 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} - 中小型企业人力资源管理信息系统</title>
+<nav>
+    <ul>
+        {% if g.user %}
+        <li><span>欢迎你，{{ g.user['username'] }}</span>
+        <li><a href="{{ url_for('auth.logout') }}">退出登录</a>
+        <li><a href="">返回首页</a>
+            {% else %}
+        <li><a href="">关于系统</a>
+        <li><a href="{{ url_for('auth.login') }}">登录</a>
+        <li><a href="{{ url_for('auth.register') }}">注册</a>
+            {% endif %}
+    </ul>
+</nav>
+<section class="content">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+</section>

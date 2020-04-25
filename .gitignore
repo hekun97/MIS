@@ -1,0 +1,16 @@
+# 使用版本控制时，忽略不是自己写入的文件
+
+venv/
+
+*.pyc
+__pycache__/
+
+instance/
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+dist/
+build/
+*.egg-info/

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<!-- 导入bootstrap -->
+	{% include 'link_js.html' ignore missing  %}
+</head>
+
+<body>
+	<!-- 路径导航开始 -->
+	<ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
+		<li><a href="{{ url_for('company.home')}} ">主页</a></li>
+		<li><a href="{{ url_for('leave.allow')}}">请假管理</a></li>
+		<li class="active">未批复请假</li>
+	</ol>
+	<hr>
+	<!-- 路径导航结束 -->
+	<!-- 条件搜索开始 -->
+	<form class="form-inline col-md-offset-7" method="post">
+		<div class="form-group">
+			<select class="form-control" style="width: 150px;" name="search_name">
+				<option>按员工姓名搜索</option>
+				<option>按请假类型搜索</option>
+			</select></div>
+		</div>
+		<div class="form-group">
+			<input type="text" name="name" class="form-control" placeholder="请按要求输入内容">
+		</div>
+		<button type="submit" class="btn btn-primary">搜索</button>
+	</form>
+	<!-- 条件搜索结束 -->
+	<br>
+	<div class="container">
+		<div class="row">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>员工姓名</th>
+						<th>请假类型</th>
+						<th>开始请假时间</th>
+						<th>结束请假时间</th>
+						<th>总请假时间</th>
+						<th>请假理由</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for post in list %}
+					<tr>
+						<td>{{ post['id'] }}</td>
+						<td>{{ post['username'] }}</td>
+						<td>{{ post['leave_name'] }}</td>
+						<td>{{ post['begin_time'] }}</td>
+						<td>{{ post['end_time'] }}</td>
+						<td>{{ post['leave_time'] }}</td>
+						<td>{{ post['leave_describe'] }}</td>
+						<td>
+							<a class="action" href="{{ url_for('leave.not_allow_describe', id=post['id']) }}">批复</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<!-- 分页 -->
+			{% include 'page.html' ignore missing  %}
+			<!-- 分页 -->
+		</div>
+	</div>
+</body>
+
+</html>

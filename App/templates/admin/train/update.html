@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>修改员工信息</title>
+
+	<!-- 导入bootstrap -->
+	{% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+    <div style="padding: 20px;">
+        <h5>当前位置>员工管理>修改员工</h5>
+    </div>
+    <hr>
+    <div class="container-fluid">
+        <form class="form-inline" method="post">
+            <!-- 第一行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">员工姓名</label>
+                        <input type="text" name='username' class="form-control"
+                            value="{{ request.form['username'] or post['username'] }}" required> </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">员工性别</label>
+                        <div class="form-group">
+                            <select class="form-control" style="width: 196px;" name="sex">
+                                <option>男</option>
+                                <option>女</option>
+                            </select></div>
+                    </div>
+                </p>
+            </div>
+            <!-- 第三行 -->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputName2">员工生日</label>
+                        <input type="date" id="date1" class="form-control" name="birthday" value="2020-04-01"
+                            style="width: 196px;" />
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">入职时间</label>
+                        <input type="date" id="date2" name="work_begin_day" class="form-control" value="2020-04-01"
+                            style="width: 196px;" />
+                    </div>
+                </p>
+            </div>
+            <!-- 第三行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">职位编号</label>
+                        <div class="form-group">
+                            <select class="form-control" style="width: 196px;" name="pt_id">
+                                {% for post in pt_posts %}
+                                <option>{{ post['id'] }}</option>
+                                {% endfor %}
+                            </select></div>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">员工薪资</label>
+                        <input type="text" name="money" class="form-control" placeholder="请输入薪资">
+                    </div>
+                </p>
+            </div>
+            <!-- 第四行 -->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">团队编号</label>
+                        <div class="form-group">
+                            <select class="form-control" style="width: 196px;" name="team_id">
+                                {% for post in team_posts %}
+                                <option>{{ post['id'] }}</option>
+                                {% endfor %}
+                            </select></div>
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">部门编号</label>
+                        <div class="form-group">
+                            <select class="form-control" style="width: 196px;" name="dp_id">
+                                {% for post in posts %}
+                                <option>{{ post['id'] }}</option>
+                                {% endfor %}
+                            </select></div>
+                    </div>
+                </p>
+            </div>
+            <!-- 第五行 -->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputName2">员工密码</label>
+                        <input type="password" class="form-control" name="password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">员工权限</label>
+                        <div class="form-group">
+                            <select class="form-control" style="width: 196px;" name="level">
+                                <option>员工</option>
+                                <option>管理员</option>
+                            </select></div>
+                    </div>
+                </p>
+            </div>
+            <!-- 错误信息 -->
+            {% for message in get_flashed_messages() %}
+            <div class="col-sm-offset-2 col-sm-10">{{message}}</div>
+            {% endfor%}
+            <!-- 提交和取消按钮 -->
+            <div class="col-md-offset-4 col-md-8">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button type="reset" class="btn btn-danger col-md-offset-1">取消</button>
+            </div>
+        </form>
+
+
+    </div>
+</body>
+
+</html>

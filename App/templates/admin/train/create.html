@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>添加员工</title>
+
+	<!-- 导入bootstrap -->
+	{% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+    <div style="padding: 20px;">
+        <h5>当前位置>培训信息>发起培训</h5>
+    </div>
+    <hr>
+    <div class="container-fluid">
+        <form class="form-inline" method="post">
+            <!-- 第一行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">培训名称</label>
+                        <input type="text" name='train_title' class="form-control" placeholder="请输入培训名称">
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">培训内容</label>
+                        <textarea class="form-control" rows="3" cols="22" style="resize:none" name="train_body" placeholder="请填写培训内容描述"></textarea>
+                    </div>
+                </p>
+            </div>
+            <!-- 第二行 -->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputName2">开始时间</label>
+                        <input name="train_begin_time" type="date" id="date1" class="form-control" value="2019-05-18" style="width: 196px;" />
+                    </div>
+                    <div class="form-group col-sm-offset-1">
+                        <label for="exampleInputEmail2">结束时间</label>
+                        <input name="train_end_time" type="date" id="date2" class="form-control" value="2019-05-18" style="width: 196px;"
+                            onblur="huoqu()" />
+                    </div>
+                </p>
+            </div>
+            <!-- 第三行-->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2">总时间</label>
+                    <input name="train_time" type="text" class="form-control" id="days" readonly="readonly">
+                    </div>
+                </p>
+            </div>            
+            <!-- 错误信息 -->
+            {% for message in get_flashed_messages() %}
+            <div class="col-sm-offset-2 col-sm-10">{{message}}</div>
+            {% endfor%}
+            <!-- 提交和取消按钮 -->
+            <div class="col-md-offset-4 col-md-8">
+                <button type="submit" class="btn btn-primary">提交</button>
+                <button type="reset" class="btn btn-danger col-md-offset-1">取消</button>
+            </div>
+
+        </form>
+
+
+    </div>
+</body>
+
+</html>

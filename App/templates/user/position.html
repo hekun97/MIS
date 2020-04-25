@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<!-- 导入bootstrap -->
+	{% include 'link_js.html' ignore missing  %}
+
+</head>
+
+<body>
+	<ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
+        <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
+        <li><a href="{{ url_for('position_user.show_user_pt')}}">职位信息</a></li>
+        <li class="active">职位信息展示</li>
+      </ol>
+    <hr>
+	<form class="form-inline col-md-offset-9" method="post">
+		<div class="form-group">
+			<!-- 查找员工 -->
+			<input class="form-control col-md-6" type="text" name="pt_name" placeholder="请输入职位名称">
+		</div>
+		<button type="submit" class="btn btn-primary">搜索</button>
+	</form>
+	</br>
+	<div class="container">
+		<div class="row">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>职位名称</th>
+						<th>职位描述</th>
+						<th>职位人数</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for post in list %}
+					<tr>
+						<td>{{ post['id'] }}</td>
+						<td>{{ post['pt_name'] }}</td>
+						<td>{{ post['pt_describe'] }}</td>
+						<td>{{ post['pt_count'] }}</td>	
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<!-- 分页 -->
+			{% include 'page.html' ignore missing  %}
+			<!-- 分页 -->
+		</div>
+	</div>
+</body>
+
+</html>
