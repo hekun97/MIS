@@ -11,8 +11,8 @@ def test():
         li.append(i)
     pager_obj = Pagination(request.args.get("page", 1), len(li), request.path, request.args, per_page_count=10)
     print(request.path)
-    print(request.args)
     print('this is a test')
+    print('thid is a next test')
     index_list = li[pager_obj.start:pager_obj.end]
     html = pager_obj.page_html()
     return render_template("test.html", index_list=index_list, html=html)
