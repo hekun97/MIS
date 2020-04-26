@@ -8,6 +8,7 @@ from App.auth import login_required
 from App.db import get_db
 from App.page_utils import Pagination
 from App.page_utils import page_same
+import re
 bp = Blueprint('personnel', __name__)
 
 # 展示员工 路由
@@ -217,19 +218,76 @@ def create():
 
         # 添加员工校验
         error = None
+        # 邮箱检验正则
+        ex_email = re.compile(
+            r'^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$')
+        # 电话检验正则
+        '''
+        1. 因为手机号都以1开头，所以通过^1限定以1开头
+        2. 手机号第二位只有3,5,6,7,8,这几个数字，所以通过[3,5,6,7,8]来匹配其中的任一数字
+        3. 最后｛9｝匹配9个/d。
+        '''
+        ex_tel = re.compile(r"^1[35678]\d{9}$")
+        # 密码验证正则
+        '''
+        1. 小写字母
+        2. 大写字母
+        3. 包含大小写英文和数字
+        '''
+        lowerRegex = re.compile('[a-z]')
+        upperRegex = re.compile('[A-Z]')
+        digitRegex = re.compile('[0-9]')
+        wrongRegex = re.compile('[^a-zA-Z0-9]')
+        # 验证员工姓名
         if not username:
             error = '请填写用户名！'
-        elif not password:
-            error = '请填写密码！'
-        elif not money or isinstance(money, int) == False:
-            error = '请输入正确的薪酬数字！'
-        elif not tel or isinstance(tel, int) == False:
-            error = '请填写密码！'  
-       
         elif db.execute(
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
-            error = '用户名 {} 已经被注册.'.format(username)
+            error = '用户名 {} 已经被注册！'.format(username)
+        # 验证员工邮箱
+        elif not email:
+            error = '请填写员工邮箱！'
+        elif ex_email.match(email) == None:
+            error = '员工邮箱：{} 不合法！'.format(email)
+        # 验证员工电话
+        elif not tel:
+            error = '请填写员工电话！'
+        elif ex_tel.match(tel) == None:
+            error = '员工电话:{} 不合法！'.format(tel)
+        # 验证部门
+        elif dp_name == '请先添加部门':
+            error = '请先添加部门'
+        # 验证团队
+        elif team_name == '请先添加团队':
+            error = '请先添加团队'
+        # 验证职位
+        elif pt_name == '请先添加职位':
+            error = '请先添加职位'
+        # 验证密码
+        elif not password:
+            error = '请填写员工密码！'
+        elif password:
+            print(password)
+            if len(password) < 8:
+                error = '输入的密码长度不足8位！'
+            elif wrongRegex.search(password) != None:
+                error = '输入的密码包含无效字符！'
+            else:
+                if lowerRegex.search(password) == None:
+                    error = '输入的密码未包含小写字母！'
+                elif upperRegex.search(password) == None:
+                    error = '输入的密码未包含大写字母！'
+                elif digitRegex.search(password) == None:
+                    error = '输入的密码未包含数字！'
+        # 验证薪资
+        elif not money:
+            error = '请填写员工薪资！'
+        elif money:
+            try:
+                int(money)
+            except:
+                error = '员工薪资{}不合法！'.format(money)
         if error is None:
             # 将注册值插入到数据库
             db.execute(
@@ -247,24 +305,24 @@ def create():
             'SELECT dp_name FROM department'
         ).fetchall()
         # 判断是否有部门
-        if len(posts)==0:
-            po=('请先添加部门',)
+        if len(posts) == 0:
+            po = ('请先添加部门',)
             posts.append(po)
         # 拿到团队的数据
         team_posts = db.execute(
             'SELECT team_name FROM team'
         ).fetchall()
         # 判断是否有团队
-        if len(team_posts)==0:
-            po=('请先添加团队',)
+        if len(team_posts) == 0:
+            po = ('请先添加团队',)
             team_posts.append(po)
         # 拿到职位的信息
         pt_posts = db.execute(
             'SELECT pt_name FROM position'
         ).fetchall()
         # 判断是否有职位
-        if len(pt_posts)==0:
-            po=('请先添加职位',)
+        if len(pt_posts) == 0:
+            po = ('请先添加职位',)
             pt_posts.append(po)
         return render_template('admin/personnel/create.html', posts=posts, team_posts=team_posts, pt_posts=pt_posts)
 
