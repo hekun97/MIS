@@ -24,7 +24,7 @@
                 <p>
                     <div class="form-group col-sm-offset-2">
                         <label for="exampleInputEmail2">部门名称</label>
-                        <input type="text" name='dp_name' class="form-control" value="{{ request.form['dp_name'] or post['dp_name'] }}"
+                        <input type="text" id="wd" name='dp_name' class="form-control" value="{{ request.form['dp_name'] or post['dp_name'] }}"
                         required>
                     </div>
                 </p>
@@ -34,7 +34,7 @@
 				<p>
 					<div class="form-group col-sm-offset-2">
 						<label for="exampleInputName2">部门描述</label>
-						<textarea class="form-control" rows="3" cols="22" style="resize:none" name="dp_describe">{{ request.form['dp_describe'] or post['dp_describe'] }}</textarea>
+						<textarea class="form-control" id="wd" rows="3" cols="22" style="resize:none" name="dp_describe">{{ request.form['dp_describe'] or post['dp_describe'] }}</textarea>
 					</div>
 				</p>
 			</div>

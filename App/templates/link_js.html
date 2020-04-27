@@ -12,5 +12,13 @@
 		<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
 		<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
 		<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
-		<!-- 导入pre的样式 -->
-		<link rel="stylesheet" href="{{url_for('static', filename='css/pre.css')}}">
+
+		<!-- 导入jQuery -->
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+		<!-- 导入other的js样式 -->
+		<script type="text/javascript" src="{{url_for('static', filename='js/leave_time.js')}}"></script>
+		<!-- 导入now_time的js样式 -->
+		<script type="text/javascript" src="{{url_for('static', filename='js/now_time.js')}}"></script>
+		<!-- 导入other的样式 -->
+		<link rel="stylesheet" href="{{url_for('static', filename='css/other.css')}}">

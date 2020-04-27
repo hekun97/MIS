@@ -23,12 +23,12 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputEmail2">员工姓名</label>
-                        <input type="text" name='username' class="form-control"
+                        <input type="text"  id="wd" name='username' class="form-control"
                             value="{{ request.form['username'] or post['username'] }}" required> </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工性别</label>
                         <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="sex">
+                            <select class="form-control" id="wd" name="sex">
                                 <option>男</option>
                                 <option>女</option>
                             </select></div>
@@ -56,12 +56,12 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">员工邮箱</label>
-                        <input type="text" class="form-control" name="email"
+                        <input type="text" id="wd" class="form-control" name="email"
                             value="{{ request.form['email'] or post['email'] }}">
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工电话</label>
-                        <input type="text" class="form-control" name="tel"
+                        <input type="text" id="wd" class="form-control" name="tel"
                             value="{{ request.form['tel'] or post['tel'] }}">
                     </div>
                 </p>
@@ -72,7 +72,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail2">员工职位</label>
                         <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="pt_name">
+                            <select class="form-control" id="wd" name="pt_name">
                                 <!-- 第一个选项为当前用户的职位 -->
                                 {% for post in pt_fact %}
                                 <option>{{ post['pt_name'] }}</option>
@@ -85,7 +85,7 @@
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工薪资</label>
-                        <input type="text" name="money" class="form-control" placeholder="请输入薪资"
+                        <input type="text" name="money"  id="wd" class="form-control" placeholder="请输入薪资"
                             value="{{ request.form['money'] or post['money'] }}">
                     </div>
                 </p>
@@ -110,7 +110,7 @@
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">所属部门</label>
                         <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="dp_name">
+                            <select class="form-control" id="wd" name="dp_name">
                                 <!-- 第一个选项为当前用户的部门 -->
                                 {% for post in dp_fact %}
                                 <option>{{ post['dp_name'] }}</option>
@@ -129,12 +129,12 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">员工密码</label>
-                        <input type="password" class="form-control" name="password" placeholder="请输入密码">
+                        <input type="password" id="wd" class="form-control" name="password" placeholder="请输入密码">
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工权限</label>
                         <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="level">
+                            <select class="form-control" id="wd" name="level">
                                 <option>{{post['level']}}</option>
                                 {% if post['level']=='管理员' %}
                                 <option>员工</option>

@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>员工请假页面</title>
-	<!-- 导入bootstrap -->
-	{% include 'link_js.html' ignore missing  %}
-    <script type="text/javascript" src="{{url_for('static', filename='js/leave_time.js')}}"></script>
+    <!-- 导入bootstrap -->
+    {% include 'link_js.html' ignore missing  %}
+
 </head>
 
 <body>
@@ -14,7 +14,7 @@
         <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
         <li><a href="{{ url_for('leave_user.create_leave')}}">请假管理</a></li>
         <li class="active">申请请假</li>
-      </ol>
+    </ol>
     <hr>
     <form class="form-inline" method="post">
         <!-- 第一行-->
@@ -22,11 +22,11 @@
             <p>
                 <div class="form-group">
                     <label for="exampleInputName2">开始时间</label>
-                    <input name="begin_time" type="date" id="date1" class="form-control" value="2019-05-18" style="width: 196px;" />
+                    <input name="begin_time" type="date" id="date1" class="form-control" style="width: 196px;" />
                 </div>
                 <div class="form-group col-sm-offset-1">
                     <label for="exampleInputEmail2">结束时间</label>
-                    <input name="end_time" type="date" id="date2" class="form-control" value="2019-05-18" style="width: 196px;"
+                    <input name="end_time" type="date" id="date2" class="form-control" style="width: 196px;"
                         onblur="huoqu()" />
                 </div>
             </p>
@@ -36,12 +36,12 @@
             <p>
                 <div class="form-group">
                     <label for="exampleInputEmail2">请假天数</label>
-                    <input name="leave_time" type="text" class="form-control" id="days" readonly="readonly">
+                    <input name="leave_time" type="text" class="form-control" id="days" readonly="readonly" style="width: 196px;" />
                 </div>
                 <div class="form-group col-sm-offset-1">
                     <label for="exampleInputEmail2">请假类型</label>
                     <div class="form-group">
-                        <select class="form-control" style="width: 196px;" name="leave_name">
+                        <select class="form-control" id="wd" name="leave_name">
                             <option>事假</option>
                             <option>病假</option>
                             <option>婚假</option>
@@ -57,7 +57,8 @@
             <p>
                 <div class="form-group">
                     <label for="exampleInputName2">请假理由</label>
-                    <textarea name="leave_describe" class="form-control" rows="3" cols="72" style="resize:none" placeholder="请填写请假理由"></textarea>
+                    <textarea name="leave_describe" class="form-control" rows="3" cols="80" style="resize:none;width: 530px;"
+                        placeholder="请填写请假理由"></textarea>
                 </div>
             </p>
         </div>

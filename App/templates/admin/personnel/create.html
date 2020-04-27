@@ -27,12 +27,12 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputEmail2">员工姓名</label>
-                        <input type="text" name='username' class="form-control" placeholder="请输入员工姓名">
+                        <input type="text" name='username' class="form-control" id="wd" placeholder="请输入员工姓名">
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工性别</label>
-                        <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="sex">
+                        <div class="form-group wd">
+                            <select class="form-control" id="wd" name="sex">
                                 <option>男</option>
                                 <option>女</option>
                             </select></div>
@@ -44,26 +44,26 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">员工生日</label>
-                        <input type="date" id="date1" class="form-control" name="birthday" value="2020-04-01"
-                            style="width: 196px;" />
+                        <input type="date" id="date1" class="form-control" name="birthday" style="width: 196px;" />
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">入职时间</label>
-                        <input type="date" id="date2" name="work_begin_day" class="form-control" value="2020-04-01"
+                        <input type="date" id="date2" name="work_begin_day" class="form-control"
                             style="width: 196px;" />
                     </div>
                 </p>
             </div>
+
             <!-- 第三行-->
             <div class="col-sm-offset-2 col-sm-10">
                 <p>
                     <div class="form-group">
                         <label for="exampleInputEmail2">员工邮箱</label>
-                        <input type="text" name="email" class="form-control" placeholder="请输入邮箱地址">
+                        <input type="text"  id="wd" name="email" class="form-control" placeholder="请输入邮箱地址">
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工电话</label>
-                        <input type="text" name="tel" class="form-control" placeholder="请输入电话号码">
+                        <input type="text"  id="wd" name="tel" class="form-control" placeholder="请输入电话号码">
                     </div>
                 </p>
             </div>
@@ -73,7 +73,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail2">部门名称</label>
                         <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="dp_name">
+                            <select class="form-control"  id="wd" name="dp_name">
                                 {% for post in posts %}
                                 {% for po in post %}
                                 <option>{{ po }}</option>
@@ -85,7 +85,7 @@
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">团队名称</label>
                         <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="team_name">
+                            <select class="form-control"  id="wd" name="team_name">
                                 {% for post in team_posts %}
                                 {% for po in post %}
                                 <option>{{ po }}</option>
@@ -101,7 +101,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail2">职位名称</label>
                         <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="pt_name">
+                            <select class="form-control" id="wd" name="pt_name">
                                 {% for post in pt_posts %}
                                 {% for po in post %}
                                 <option>{{ po }}</option>
@@ -111,7 +111,7 @@
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工薪资</label>
-                        <input type="text" name="money" class="form-control" placeholder="请输入薪资">
+                        <input type="text" name="money"  id="wd" class="form-control" placeholder="请输入薪资">
                     </div>
                 </p>
             </div>
@@ -120,12 +120,12 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">员工密码</label>
-                        <input type="password" class="form-control" name="password" placeholder="请输入密码">
+                        <input type="password"  id="wd" class="form-control" name="password" placeholder="请输入密码">
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工权限</label>
                         <div class="form-group">
-                            <select class="form-control" style="width: 196px;" name="level">
+                            <select class="form-control" id="wd" name="level">
                                 <option>员工</option>
                                 <option>管理员</option>
                             </select></div>
