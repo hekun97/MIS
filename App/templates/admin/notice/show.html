@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>展示通知</title>
+    <!-- 导入公用头部 -->
+    {% include 'link_js.html' ignore missing  %}
+</head>
+
+<body>
+    <!-- 路径导航开始 -->
+    <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
+        <li><a href="{{ url_for('company.home')}} ">主页</a></li>
+        <li><a href="{{ url_for('company.notice')}}">通知管理</a></li>
+        <li class="active">查看通知信息</li>
+    </ol>
+    <hr>
+    <!-- 路径导航结束 -->
+    <!-- 条件搜索开始 -->
+    {% if posts==[] %}
+    <div class="col-sm-offset-1">
+        <h1>还没有通知信息哟！</h1>
+        <a href="{{ url_for('company.create_notice') }}">点击添加通知信息</a>
+    </div>
+    {% else %}
+    <form class="form-inline col-md-offset-7" method="post">
+        <div class="form-group">
+            <select class="form-control" style="width: 150px;" name="search_name">
+                <option>按标题搜索</option>
+                <option>按发布人搜索</option>
+            </select></div>
+        </div>
+        <div class="form-group">
+            <input type="text" name="name" class="form-control" placeholder="请按要求输入内容">
+        </div>
+        <button type="submit" class="btn btn-primary">搜索</button>
+    </form>
+    <!-- 条件搜索结束 -->
+    <br>
+    <div class="container">
+        <div class="row">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>标题</th>
+                        <th>发布人</th>
+                        <th>发布时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr>
+                        <td>{{ post['id'] }}</td>
+                        <td> <a
+                                href="{{ url_for('company.show_more_notice', id=post['id']) }}">{{ post['cp_title'] }}</a>
+                        </td>
+                        <td>{{ post['username'] }}</td>
+                        <td>{{ post['cp_created'].strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- 分页 -->
+            {% include 'page.html' ignore missing  %}
+            <!-- 分页 -->
+        </div>
+    </div>
+    {% endif %}
+</body>
+
+</html>
