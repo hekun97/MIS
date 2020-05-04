@@ -12,31 +12,28 @@ bp = Blueprint('train', __name__)
 # 查看培训信息 路由
 @bp.route('/show_train', methods=('GET', 'POST'))
 def show_train():
+    db = get_db()
     if request.method == 'POST':
         train_title = request.form['train_title']
-        db = get_db()
         posts = db.execute(
             '''
-            SELECT t.id,t.train_title,t.create_time,
-            (SELECT username FROM user u2 WHERE t.author_id=u2.id) AS train_author,
-            (SELECT COUNT(*) FROM user u WHERE t.join_id=u.id) AS train_count
-            FROM train t WHERE t.train_title=?
+            SELECT t.id,train_title,train_time,username
+            FROM train t user u WHERE author_id=u.id AND t.train_title=?
         ''', (train_title,)
         )
         return render_template('admin/train/show.html', posts=posts)
     else:
-        db = get_db()
         posts = db.execute(
             '''
-            SELECT t.id,t.train_title,t.create_time,
-            (SELECT username FROM user u2 WHERE t.author_id=u2.id) AS train_author,
-            (SELECT COUNT(*) FROM user u WHERE t.join_id=u.id) AS train_count
+            SELECT t.id,train_title,train_time,create_time,
+            (SELECT COUNT(*) FROM user u WHERE join_id=u.id) AS count_join,
+            (SELECT username FROM user u WHERE author_id=u.id) AS author           
             FROM train t
             '''
         )
         return render_template('admin/train/show.html', posts=posts)
 
-# 添加职位 路由
+# 添加培训 路由
 @bp.route('/create_train', methods=('GET', 'POST'))
 def create_train():
     if request.method == 'POST':
@@ -61,7 +58,7 @@ def create_train():
             # 将值插入到数据库
             db.execute(
                 '''
-                INSERT INTO train (train_title, train_body,train_begin_time,train_end_time,train_time,author_id,create_time) VALUES (?,?,?,?,?,?,date("now"))
+                INSERT INTO train (train_title, train_body,train_begin_time,train_end_time,train_time,author_id) VALUES (?,?,?,?,?,?)
                 ''', (train_title,  train_body, train_begin_time, train_end_time, train_time, author_id)
             )
             db.commit()

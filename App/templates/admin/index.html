@@ -50,7 +50,7 @@
 					<ul class="nav">
 						<!-- 主页信息管理 -->
 						<li><a href="{{ url_for('company.home') }}" target="_blank"
-								class="iframe_link active"><span>主页信息管理</span></a></li>						
+								class="iframe_link active"><span>主页信息管理</span></a></li>
 						<!-- 员工信息管理 -->
 						<li>
 							<a href="javascript:;" class="nav-togg"> <span>员工信息管理</span> </a>
@@ -100,25 +100,26 @@
 							</div>
 						</li>
 						<!-- 请假信息管理 -->
-							<li>
-								<a href="javascript:;" class="nav-togg"> <span>请假信息管理</span> </a>
-								<div>
-									<ul>
-										<li><a href="{{ url_for('leave.allow') }}" target="_blank"
-												class="iframe_link"><span>已批复请假信息</span></a></li>
-										<li><a href="{{ url_for('leave.not_allow') }}" target="_blank"
-												class="iframe_link"><span>未批复请假信息</span></a></li>
-									</ul>
-								</div>
-							</li>
-						<!-- 培训信息管理 -->
 						<li>
-							<a href="javascript:;" class="nav-togg"> <span>培训信息管理</span> </a>
+							<a href="javascript:;" class="nav-togg"> <span>请假信息管理</span> </a>
 							<div>
-								<ul><li><a href="{{ url_for('train.show_train') }}" target="_blank"
-									class="iframe_link"><span>查看培训信息</span></a></li>
+								<ul>
 									<li><a href="{{ url_for('leave.allow') }}" target="_blank"
-										class="iframe_link"><span>添加培训信息</span></a></li>
+											class="iframe_link"><span>已批复请假信息</span></a></li>
+									<li><a href="{{ url_for('leave.not_allow') }}" target="_blank"
+											class="iframe_link"><span>未批复请假信息</span></a></li>
+								</ul>
+							</div>
+						</li>
+						<!-- 通知信息管理 -->
+						<li>
+							<a href="javascript:;" class="nav-togg"> <span>通知信息管理</span> </a>
+							<div>
+								<ul>
+									<li><a href="{{ url_for('company.notice') }}" target="_blank"
+											class="iframe_link"><span>查看通知信息</span></a></li>
+									<li><a href="{{ url_for('company.create_notice') }}" target="_blank"
+											class="iframe_link"><span>添加通知信息</span></a></li>
 								</ul>
 							</div>
 						</li>

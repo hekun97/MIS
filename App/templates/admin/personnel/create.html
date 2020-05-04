@@ -5,9 +5,13 @@
     <meta charset="utf-8" />
     <title>添加员工</title>
 
-    <!-- 导入bootstrap -->
+    <!-- 导入公共头部 -->
     {% include 'link_js.html' ignore missing  %}
-
+    <!-- 导入width的代码 -->
+    {% include 'width.html' ignore missing  %}
+    <!-- 导入jQuery和正则表达式的验证 -->
+    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/JavaScript.js')}}"></script>
 </head>
 
 <body>
@@ -27,7 +31,8 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputEmail2">员工姓名</label>
-                        <input type="text" name='username' class="form-control" id="wd" placeholder="请输入员工姓名">
+                        <input type="text" name='username' class="reg_user form-control" id="wd" placeholder="请输入员工姓名">
+                        <span class="user_hint"></span>
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工性别</label>
@@ -59,11 +64,13 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputEmail2">员工邮箱</label>
-                        <input type="text"  id="wd" name="email" class="form-control" placeholder="请输入邮箱地址">
+                        <input type="text" id="wd" name="email" class="reg_email form-control" placeholder="请输入邮箱地址">
+                        <span class="email_hint"></span>
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工电话</label>
-                        <input type="text"  id="wd" name="tel" class="form-control" placeholder="请输入电话号码">
+                        <input type="text" id="wd" name="tel" class="reg_mobile form-control" placeholder="请输入电话号码">
+                        <span class="mobile_hint"></span>
                     </div>
                 </p>
             </div>
@@ -73,7 +80,7 @@
                     <div class="form-group">
                         <label for="exampleInputEmail2">部门名称</label>
                         <div class="form-group">
-                            <select class="form-control"  id="wd" name="dp_name">
+                            <select class="form-control" id="wd" name="dp_name">
                                 {% for post in posts %}
                                 {% for po in post %}
                                 <option>{{ po }}</option>
@@ -85,7 +92,7 @@
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">团队名称</label>
                         <div class="form-group">
-                            <select class="form-control"  id="wd" name="team_name">
+                            <select class="form-control" id="wd" name="team_name">
                                 {% for post in team_posts %}
                                 {% for po in post %}
                                 <option>{{ po }}</option>
@@ -111,7 +118,8 @@
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工薪资</label>
-                        <input type="text" name="money"  id="wd" class="form-control" placeholder="请输入薪资">
+                        <input type="text" name="money" id="wd" class="reg_money form-control" placeholder="请输入薪资">
+                        <span class="money_hint"></span>
                     </div>
                 </p>
             </div>
@@ -120,7 +128,9 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">员工密码</label>
-                        <input type="password"  id="wd" class="form-control" name="password" placeholder="请输入密码">
+                        <input type="password" id="wd" class="reg_password form-control" name="password"
+                            placeholder="请输入密码">
+                        <span class="password_hint"></span>
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工权限</label>
@@ -137,7 +147,7 @@
                 {% include 'missing.html' ignore missing  %}
             </div>
             <div class="col-md-offset-4 col-md-8">
-                <button type="submit" class="btn btn-primary">提交</button>
+                <button type="submit" class="red_button btn btn-primary">提交</button>
                 <button type="reset" class="btn btn-danger col-md-offset-1">取消</button>
             </div>
         </form>

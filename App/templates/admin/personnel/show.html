@@ -35,7 +35,7 @@
 		<button type="submit" class="btn btn-primary">搜索</button>
 	</form>
 	<!-- 条件搜索结束 -->
-	<p></p>
+	<br>
 	<div class="container">
 		<div class="row">
 			<table class="table table-bordered table-hover">
@@ -51,14 +51,15 @@
 						<th>所属团队</th>
 						<th>所属部门</th>
 						<th>权限</th>
-						<th>操作</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for post in list %}
 					<tr>
 						<td>{{ post['id'] }}</td>
-						<td>{{ post['username'] }}</td>
+						<td> <a
+								href="{{ url_for('personnel.show_one_more', id=post['id']) }}">{{ post['username'] }}</a>
+						</td>
 						<td>{{post['sex']}}</td>
 						<td>{{post['email']}}</td>
 						<td>{{post['tel']}}</td>
@@ -67,10 +68,6 @@
 						<td>{{post['t_name']}}</td>
 						<td>{{post['d_name']}}</td>
 						<td>{{post['level']}}</td>
-						<td>
-							<a class="btn btn-primary" role="button"
-								href="{{ url_for('personnel.show_one_more', id=post['id']) }}">更多</a>
-						</td>
 					</tr>
 					{% endfor %}
 				</tbody>

@@ -6,6 +6,7 @@
 	<title>中小型企业人力资源管理信息系统——登录</title>
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/login&register.css')}}">
 	<link rel="icon" type="image/x-ico" href="{{url_for('static', filename='images/stu.ico')}}">
+
 </head>
 
 <body>
@@ -25,8 +26,8 @@
 			<form class="form" method="post">
 				<h3>中小型企业人力资源管理信息系统</h3>
 				<p>登录</p>
-				<input type="text" autofocus="autofocus" name="username" placeholder="用户名" required="required"
-					value="{{username}}">
+				<input type="text" autofocus="autofocus" name="username" placeholder="用户名"
+					required="required" value="{{username}}">
 				<input type="password" name="password" placeholder="密码" required="required">
 				{% for message in get_flashed_messages() %}
 				<div>{{message}}</div>
@@ -35,7 +36,6 @@
 			</form>
 		</div>
 	</main>
-
 	<!--Footer-->
 	<footer>
 		<div class="info">

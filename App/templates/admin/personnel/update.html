@@ -4,9 +4,13 @@
 <head>
     <meta charset="utf-8" />
     <title>修改员工信息</title>
-    <!-- 导入bootstrap -->
+    <!-- 导入公共引用 -->
     {% include 'link_js.html' ignore missing  %}
-
+    <!-- 导入width的代码 -->
+    {% include 'width.html' ignore missing  %}  
+    <!-- 导入jQuery和正则表达式的验证 -->
+    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/JavaScript.js')}}"></script>
 </head>
 
 <body>
@@ -23,8 +27,12 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputEmail2">员工姓名</label>
-                        <input type="text"  id="wd" name='username' class="form-control"
-                            value="{{ request.form['username'] or post['username'] }}" required> </div>
+                        <div id="wd2" class="form-group">
+                            <input type="text" name='username' id="wd" class="reg_user form-control"
+                                value="{{ request.form['username'] or post['username'] }}" required>
+                            <span class="user_hint"></span>
+                        </div>
+                    </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工性别</label>
                         <div class="form-group">
@@ -40,8 +48,11 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">员工生日</label>
-                        <input type="date" id="date1" class="form-control" name="birthday"
+                        <div id="wd2" class="form-group">
+                            <input type="date" id="date1" class="form-control" name="birthday"
                             value="{{ request.form['birthday'] or post['birthday'] }}" style="width: 196px;" />
+                        </div>
+
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">入职时间</label>
@@ -56,13 +67,18 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">员工邮箱</label>
-                        <input type="text" id="wd" class="form-control" name="email"
+                        <div id="wd2" class="form-group">
+                              <input type="text" id="wd" class="reg_email form-control" name="email"
                             value="{{ request.form['email'] or post['email'] }}">
+                        <span class="email_hint"></span>                      
+                        </div>
+
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工电话</label>
-                        <input type="text" id="wd" class="form-control" name="tel"
+                        <input type="text" id="wd" class="reg_mobile form-control" name="tel"
                             value="{{ request.form['tel'] or post['tel'] }}">
+                        <span class="mobile_hint"></span>
                     </div>
                 </p>
             </div>
@@ -71,7 +87,8 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputEmail2">员工职位</label>
-                        <div class="form-group">
+
+                        <div id="wd2" class="form-group">
                             <select class="form-control" id="wd" name="pt_name">
                                 <!-- 第一个选项为当前用户的职位 -->
                                 {% for post in pt_fact %}
@@ -85,8 +102,9 @@
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工薪资</label>
-                        <input type="text" name="money"  id="wd" class="form-control" placeholder="请输入薪资"
+                        <input type="text" name="money" id="wd" class="reg_money form-control" placeholder="请输入薪资"
                             value="{{ request.form['money'] or post['money'] }}">
+                        <span class="money_hint"></span>
                     </div>
                 </p>
             </div>
@@ -95,7 +113,7 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputEmail2">所属团队</label>
-                        <div class="form-group">
+                        <div id="wd2" class="form-group">
                             <select class="form-control" style="width: 196px;" name="team_name">
                                 <!-- 第一个选项为当前用户的团队 -->
                                 {% for post in team_fact %}
@@ -129,7 +147,10 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">员工密码</label>
-                        <input type="password" id="wd" class="form-control" name="password" placeholder="请输入密码">
+                        <div id="wd2" class="form-group">
+                        <input type="password" id="wd" class="reg_password form-control" name="password" placeholder="请输入密码">
+                        <span class="password_hint"></span>   
+                    </div>
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工权限</label>
@@ -151,7 +172,7 @@
             {% endfor%}
             <!-- 提交和取消按钮 -->
             <div class="col-md-offset-4 col-md-8">
-                <button type="submit" class="btn btn-primary">提交</button>
+                <button type="submit" class="red_button btn btn-primary">提交</button>
                 <button type="reset" class="btn btn-danger col-md-offset-1">取消</button>
             </div>
         </form>

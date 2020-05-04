@@ -41,13 +41,10 @@ def show_dp():
             (SELECT COUNT(*) FROM user u WHERE u.dp_id=d.id) AS dp_count
             FROM department d
             '''
-        )
-        li = []
-        for post in posts:
-            li.append(post)
+        ).fetchall()
         pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
+            posts), request.path, request.args, per_page_count=10)
+        list = posts[pager_obj.start:pager_obj.end]
         html = pager_obj.page_html()
         return render_template('admin/department/show.html', list=list, html=html)
 

@@ -11,8 +11,19 @@ from App.page_utils import page_same
 import re
 bp = Blueprint('personnel', __name__)
 
+# 拿到员工的相应信息
+sql = '''
+SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
+(strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
+(strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
+(SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
+(SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
+(SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name FROM user u
+'''
+
 # 展示员工 路由
 @bp.route('/show', methods=('GET', 'POST'))
+@login_required
 def show():
     db = get_db()
     if request.method == 'POST':
@@ -22,159 +33,78 @@ def show():
         # 按姓名搜索
         if search_name == '按姓名搜索':
             posts = db.execute(
-                '''
-                SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
-                (strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
-                (strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE u.username LIKE ?
-                ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/personnel/show.html', list=list, html=html)
+                sql + '''WHERE u.username LIKE ?''', (name,)
+            ).fetchall()
         # 按性别搜索
         elif search_name == '按性别搜索':
             posts = db.execute(
-                '''
-                SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
-                (strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
-                (strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE u.sex LIKE ?
-                ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/personnel/show.html', list=list, html=html)
+                sql + '''WHERE u.sex LIKE ?''', (name,)
+            ).fetchall()
         # 按权限搜索
         elif search_name == '按权限搜索':
             posts = db.execute(
-                '''
-                SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
-                (strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
-                (strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE u.level LIKE ?
-                ''', (name,)
+                sql + '''WHERE u.level LIKE ?''', (name,)
             )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/personnel/show.html', list=list, html=html)
         # 按职位搜索
         elif search_name == '按职位搜索':
             posts = db.execute(
-                '''
-                SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
-                (strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
-                (strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE p_name LIKE ?
-                ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/personnel/show.html', list=list, html=html)
+                sql + '''WHERE p_name LIKE ?''', (name,)
+            ).fetchall()
         # 按所属团队搜索
         elif search_name == '按所属团队搜索':
             posts = db.execute(
-                '''
-                SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
-                (strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
-                (strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE t_name LIKE ?
-                ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/personnel/show.html', list=list, html=html)
+                sql + '''WHERE t_name LIKE ?''', (name,)
+            ).fetchall()
         # 按所属部门搜索
         elif search_name == '按所属部门搜索':
             posts = db.execute(
-                '''
-                SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
-                (strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
-                (strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE d_name LIKE ?
-                ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/personnel/show.html', list=list, html=html)
-    # 默认条件下
-    posts = db.execute(
-        '''
-        SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
-        (strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
-        (strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
-        (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-        (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-        (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-        FROM user u
-        '''
-    )
-    li = page_same(posts)
+                sql+'''WHERE d_name LIKE ?''', (name,)
+            ).fetchall()
+    # 默认条件下展示所有员工
+    else:
+        # 判断用户权限
+        if g.user['level'] == '员工':
+            return '你的权限不够！'
+        posts = db.execute(sql).fetchall()
+    '''
+    current_page——表示当前页。
+    total_count——表示数据总条数。
+    base_url——表示分页URL前缀，请求的前缀获取可以通过Flask的request.path方法，无需自己指定。
+    例如：我们的路由方法为@app.route('/test')，request.path方法即可获取/test。
+    params——表示请求传入的数据，params可以通过request.args动态获取。
+    例如：我们链接点击为：http://localhost:5000/test?page=10，此时request.args获取数据为ImmutableMultiDict([('page', u'10')])
+    per_page_count——指定每页显示数。
+    max_pager_count——指定页面最大显示页码
+    '''
+    # 分页
     pager_obj = Pagination(request.args.get("page", 1), len(
-        li), request.path, request.args, per_page_count=10)
-    list = li[pager_obj.start:pager_obj.end]
+        posts), request.path, request.args, per_page_count=10)
+    list = posts[pager_obj.start:pager_obj.end]
     html = pager_obj.page_html()
     return render_template('admin/personnel/show.html', list=list, html=html)
 # 展示员工详细信息
 @bp.route('/<int:id>/show_one_more')
 @login_required
 def show_one_more(id):
+    # 判断用户权限
+    if g.user['level'] == '员工':
+        return '你的权限不够！'
     get_post(id)
     db = get_db()
     posts = db.execute(
-        '''
-            SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday,u.work_begin_day,
-            (strftime('%Y', 'now') - strftime('%Y', birthday)) - (strftime('%m-%d', 'now') < strftime('%m-%d', birthday)) AS age,
-            (strftime('%Y', 'now') - strftime('%Y', work_begin_day)) - (strftime('%m-%d', 'now') < strftime('%m-%d', work_begin_day)) AS work_age,
-            (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-            (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-            (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-            FROM user u WHERE u.id =?
-        ''', (id,)
+        sql+''' WHERE u.id =?''', (id,)
     )
     return render_template('admin/personnel/show_more.html', posts=posts)
 
 
 # 添加员工 路由
 @bp.route('/create', methods=('GET', 'POST'))
+@login_required
 def create():
     db = get_db()
+    # 判断用户权限
+    if g.user['level'] == '员工':
+        return '你的权限不够！'
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -189,72 +119,37 @@ def create():
         tel = request.form['tel']
         email = request.form['email']
         # 拿到team的id
-        team_posts = db.execute(
+        team_post = db.execute(
             '''
             SELECT id FROM team WHERE team_name=?
             ''', (team_name,)
-        )
+        ).fetchone()
         # 将team表的id赋值给user表的team_id
-        for post in team_posts:
-            team_id = post['id']
+        team_id = team_post[0]
         # 拿到部门的id
-        dp_posts = db.execute(
+        dp_post = db.execute(
             '''
             SELECT id FROM department WHERE dp_name=?
             ''', (dp_name,)
-        )
+        ).fetchone()
         # 将department表的id赋值给user表的dp_id
-        for post in dp_posts:
-            dp_id = post['id']
+        dp_id = dp_post[0]
         # 拿到职位的id
-        pt_posts = db.execute(
+        pt_post = db.execute(
             '''
             SELECT id FROM position WHERE pt_name=?
             ''', (pt_name,)
-        )
+        ).fetchone()
         # 将position表的id赋值给user表的pt_id
-        for post in pt_posts:
-            pt_id = post['id']
+        pt_id = pt_post[0]
 
         # 添加员工校验
         error = None
-        # 邮箱检验正则
-        ex_email = re.compile(
-            r'^[0-9a-zA-Z_]{0,19}@[0-9a-zA-Z]{1,13}\.[com,cn,net]{1,3}$')
-        # 电话检验正则
-        '''
-        1. 因为手机号都以1开头，所以通过^1限定以1开头
-        2. 手机号第二位只有3,5,6,7,8,这几个数字，所以通过[3,5,6,7,8]来匹配其中的任一数字
-        3. 最后｛9｝匹配9个/d。
-        '''
-        ex_tel = re.compile(r"^1[35678]\d{9}$")
-        # 密码验证正则
-        '''
-        1. 小写字母
-        2. 大写字母
-        3. 包含大小写英文和数字
-        '''
-        lowerRegex = re.compile('[a-z]')
-        upperRegex = re.compile('[A-Z]')
-        digitRegex = re.compile('[0-9]')
-        wrongRegex = re.compile('[^a-zA-Z0-9]')
         # 验证员工姓名
-        if not username:
-            error = '请填写用户名！'
-        elif db.execute(
+        if db.execute(
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
             error = '用户名 {} 已经被注册！'.format(username)
-        # 验证员工邮箱
-        elif not email:
-            error = '请填写员工邮箱！'
-        elif ex_email.match(email) == None:
-            error = '员工邮箱：{} 不合法！'.format(email)
-        # 验证员工电话
-        elif not tel:
-            error = '请填写员工电话！'
-        elif ex_tel.match(tel) == None:
-            error = '员工电话:{} 不合法！'.format(tel)
         # 验证部门
         elif dp_name == '请先添加部门':
             error = '请先添加部门'
@@ -264,30 +159,6 @@ def create():
         # 验证职位
         elif pt_name == '请先添加职位':
             error = '请先添加职位'
-        # 验证密码
-        elif not password:
-            error = '请填写员工密码！'
-        elif password:
-            print(password)
-            if len(password) < 8:
-                error = '输入的密码长度不足8位！'
-            elif wrongRegex.search(password) != None:
-                error = '输入的密码包含无效字符！'
-            else:
-                if lowerRegex.search(password) == None:
-                    error = '输入的密码未包含小写字母！'
-                elif upperRegex.search(password) == None:
-                    error = '输入的密码未包含大写字母！'
-                elif digitRegex.search(password) == None:
-                    error = '输入的密码未包含数字！'
-        # 验证薪资
-        elif not money:
-            error = '请填写员工薪资！'
-        elif money:
-            try:
-                int(money)
-            except:
-                error = '员工薪资{}不合法！'.format(money)
         if error is None:
             # 将注册值插入到数据库
             db.execute(
@@ -330,6 +201,9 @@ def create():
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
+    # 判断用户权限
+    if g.user['level'] == '员工':
+        return '你的权限不够！'
     # 拿到数据库中的id，username,level
     post = get_post(id)
     db = get_db()
@@ -347,41 +221,34 @@ def update(id):
         tel = request.form['tel']
         email = request.form['email']
         # 拿到team的id
-        team_posts = db.execute(
+        team_post = db.execute(
             '''
             SELECT id FROM team WHERE team_name=?
             ''', (team_name,)
-        )
+        ).fetchone()
         # 将team表的id赋值给user表的team_id
-        for post in team_posts:
-            team_id = post['id']
+        team_id = team_post[0]
         # 拿到部门的id
-        dp_posts = db.execute(
+        dp_post = db.execute(
             '''
             SELECT id FROM department WHERE dp_name=?
             ''', (dp_name,)
-        )
+        ).fetchone()
         # 将department表的id赋值给user表的dp_id
-        for post in dp_posts:
-            dp_id = post['id']
+        dp_id = dp_post[0]
         # 拿到职位的id
-        pt_posts = db.execute(
+        pt_post = db.execute(
             '''
             SELECT id FROM position WHERE pt_name=?
             ''', (pt_name,)
-        )
+        ).fetchone()
         # 将position表的id赋值给user表的pt_id
-        for post in pt_posts:
-            pt_id = post['id']
+        pt_id = pt_post[0]
 
         db = get_db()
         # 校验
         error = None
-        if not username:
-            error = '请填写用户名.'
-        elif not password:
-            error = '请填写密码.'
-        elif db.execute(
+        if db.execute(
             'SELECT id FROM user WHERE username = ? AND id != ?', (
                 username, id)
         ).fetchone() is not None:
@@ -406,7 +273,7 @@ def update(id):
                     username = ?, password = ?,sex=?,level=?,money=?,birthday=?,work_begin_day=?,team_id=?,pt_id=?,dp_id=?,tel=?,email=?
                 WHERE
                     id = ?
-                ''', (username, password, sex, level, money, birthday,
+                ''', (username, generate_password_hash(password), sex, level, money, birthday,
                       work_begin_day, team_id, pt_id, dp_id, tel, email, id)
             )
             db.commit()
@@ -442,6 +309,9 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
+    # 判断用户权限
+    if g.user['level'] == '员工':
+        return '你的权限不够！'
     get_post(id)
     db = get_db()
     db.execute('DELETE FROM user WHERE id = ?', (id,))

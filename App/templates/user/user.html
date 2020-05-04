@@ -62,6 +62,18 @@
 								</ul>
 							</div>
 						</li>
+						<!-- 通知信息管理 -->
+						<li>
+							<a href="javascript:;" class="nav-togg"> <span>查看通知信息</span> </a>
+							<div>
+								<ul>
+									<li><a href="{{ url_for('company_user.notice_user') }}" target="_blank"
+											class="iframe_link"><span>未读通知消息</span></a></li>
+									<li><a href="{{ url_for('leave_user.level_leave') }}" target="_blank"
+											class="iframe_link"><span>已读通知消息</span></a></li>
+								</ul>
+							</div>
+						</li>
 						<!-- 查看员工信息 -->
 						<li><a href="{{ url_for('personnel_user.show_all') }}" target="_blank"
 								class="iframe_link"><span>查看员工信息</span></a>
@@ -72,7 +84,7 @@
 							<div>
 								<ul>
 									<li><a href="{{ url_for('department_user.show_user_dp_same') }}" target="_blank"
-										class="iframe_link"><span>我的部门信息</span></a></li>
+											class="iframe_link"><span>我的部门信息</span></a></li>
 									<li><a href="{{ url_for('department_user.show_user_dp') }}" target="_blank"
 											class="iframe_link"><span>所有部门信息</span></a></li>
 								</ul>
@@ -84,7 +96,7 @@
 							<div>
 								<ul>
 									<li><a href="{{ url_for('team_user.show_user_team_same') }}" target="_blank"
-										class="iframe_link"><span>我的团队信息</span></a></li>
+											class="iframe_link"><span>我的团队信息</span></a></li>
 									<li><a href="{{ url_for('team_user.show_user_team') }}" target="_blank"
 											class="iframe_link"><span>所有团队信息</span></a></li>
 								</ul>

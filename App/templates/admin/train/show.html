@@ -17,12 +17,12 @@
 		<div class="form-group">
 			<div class="col-md-offset-9">
 				<!-- 模糊查找员工 -->
-                    <input class="form-control col-md-5" type="text" name="train_title" placeholder="请输入培训名称">
-                    <div class="col-md-3">
-						<button type="submit" class="btn btn-primary">搜索</button>
-                    </div>
+				<input class="form-control col-md-5" type="text" name="train_title" placeholder="请输入培训名称">
+				<div class="col-md-3">
+					<button type="submit" class="btn btn-primary">搜索</button>
 				</div>
 			</div>
+		</div>
 		</div>
 		<hr>
 	</form>
@@ -33,10 +33,10 @@
 					<tr>
 						<th>编号</th>
 						<th>培训名称</th>
+						<th>培训时长</th>
 						<th>发起人</th>
 						<th>发起时间</th>
 						<th>已参加人数</th>
-						<th>操作</th>				
 					</tr>
 				</thead>
 				<tbody>
@@ -44,10 +44,10 @@
 					<tr>
 						<td>{{ post['id'] }}</td>
 						<td>{{ post['train_title'] }}</td>
-						<td>{{post['train_author']}}</td>
-						<td>{{post['create_time']}}</td>
-						<td>{{post['train_count']}}</td>								
-
+						<td>{{ post['train_time'] }}</td>
+						<td>{{ post['author'] }}</td>
+						<td>{{ post['create_time'].strftime('%Y-%m-%d') }}</td>
+						<td>{{ post['count_join'] }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>

@@ -6,6 +6,7 @@ from werkzeug.exceptions import abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from App.auth import login_required
 from App.db import get_db
+from App.page_utils import Pagination
 
 bp = Blueprint('leave_user', __name__)
 
@@ -46,27 +47,33 @@ def level_leave():
             posts = db.execute(
                 'SELECT * FROM leave WHERE leave_name LIKE ? AND username=? ORDER BY id DESC', (
                     name, g.user['username'],)
-            )
-            return render_template('user/leave/level.html', posts=posts)
+            ).fetchall()
         elif search_name == '按批复人搜索':
             posts = db.execute(
                 'SELECT * FROM leave WHERE allow_name LIKE ? AND username=? ORDER BY id DESC', (
                     name, g.user['username'],)
-            )
-            return render_template('user/leave/level.html', posts=posts)
+            ).fetchall()
         elif search_name == '按批复状态搜索':
             posts = db.execute(
                 'SELECT * FROM leave WHERE allow_level LIKE ? AND username=? ORDER BY id DESC', (
                     name, g.user['username'],)
-            )
-            return render_template('user/leave/level.html', posts=posts)
+            ).fetchall()
+        pager_obj = Pagination(request.args.get("page", 1), len(
+            posts), request.path, request.args, per_page_count=10)
+        list = posts[pager_obj.start:pager_obj.end]
+        html = pager_obj.page_html()
+        return render_template('user/leave/level.html', list=list, html=html)
     else:
         db = get_db()
         posts = db.execute(
             'SELECT * FROM leave WHERE username=? ORDER BY id DESC', (
                 g.user['username'],)
-        )
-        return render_template('user/leave/level.html', posts=posts)
+        ).fetchall()
+        pager_obj = Pagination(request.args.get("page", 1), len(
+            posts), request.path, request.args, per_page_count=10)
+        list = posts[pager_obj.start:pager_obj.end]
+        html = pager_obj.page_html()
+        return render_template('user/leave/level.html', list=list, html=html)
 
 # 根据id值拿到相应的数据
 

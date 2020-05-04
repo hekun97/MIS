@@ -32,6 +32,7 @@ def show_user():
 @login_required
 def update(id):
     # 拿到数据库中的id，username,level
+    db = get_db()
     post = get_post(id)
     if request.method == 'POST':
         username = request.form['username']
@@ -40,7 +41,6 @@ def update(id):
         birthday = request.form['birthday']
         email = request.form['email']
         tel = request.form['tel']
-        db = get_db()
         # 校验
         error = None
         if not username:
