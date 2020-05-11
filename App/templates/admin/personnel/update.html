@@ -8,9 +8,8 @@
     {% include 'link_js.html' ignore missing  %}
     <!-- 导入width的代码 -->
     {% include 'width.html' ignore missing  %}  
-    <!-- 导入jQuery和正则表达式的验证 -->
-    <script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
-    <script type="text/javascript" src="{{url_for('static', filename='js/JavaScript.js')}}"></script>
+    <!-- 导入正则表达式的验证 -->
+    <script type="text/javascript" src="{{url_for('static', filename='js/judge.js')}}"></script>
 </head>
 
 <body>
@@ -49,16 +48,15 @@
                     <div class="form-group">
                         <label for="exampleInputName2">员工生日</label>
                         <div id="wd2" class="form-group">
-                            <input type="date" id="date1" class="form-control" name="birthday"
-                            value="{{ request.form['birthday'] or post['birthday'] }}" style="width: 196px;" />
+                            <input type="date" id="wd" class="form-control" name="birthday"
+                            value="{{ request.form['birthday'] or post['birthday'] }}">
                         </div>
 
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">入职时间</label>
-                        <input type="date" id="date2" name="work_begin_day" class="form-control"
-                            value="{{ request.form['work_begin_day'] or post['work_begin_day'] }}"
-                            style="width: 196px;" />
+                        <input type="date" id="wd" name="work_begin_day" class="form-control"
+                            value="{{ request.form['work_begin_day'] or post['work_begin_day'] }}">
                     </div>
                 </p>
             </div>
@@ -68,7 +66,7 @@
                     <div class="form-group">
                         <label for="exampleInputName2">员工邮箱</label>
                         <div id="wd2" class="form-group">
-                              <input type="text" id="wd" class="reg_email form-control" name="email"
+                              <input type="email" id="wd" class="reg_email form-control" name="email"
                             value="{{ request.form['email'] or post['email'] }}">
                         <span class="email_hint"></span>                      
                         </div>
@@ -102,7 +100,7 @@
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工薪资</label>
-                        <input type="text" name="money" id="wd" class="reg_money form-control" placeholder="请输入薪资"
+                        <input type="number" name="money" id="wd" class="reg_money form-control" placeholder="请输入薪资"
                             value="{{ request.form['money'] or post['money'] }}">
                         <span class="money_hint"></span>
                     </div>

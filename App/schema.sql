@@ -27,7 +27,7 @@ CREATE TABLE user (
 CREATE TABLE team (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   team_name TEXT UNIQUE NOT NULL,
-  team_describe TEXT NOT NULL,
+  team_describe TEXT NOT NULL
 );
 -- 部门信息表
 CREATE TABLE department (

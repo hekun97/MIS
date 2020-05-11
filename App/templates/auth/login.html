@@ -26,9 +26,8 @@
 			<form class="form" method="post">
 				<h3>中小型企业人力资源管理信息系统</h3>
 				<p>登录</p>
-				<input type="text" autofocus="autofocus" name="username" placeholder="用户名"
-					required="required" value="{{username}}">
-				<input type="password" name="password" placeholder="密码" required="required">
+				<input type="text" autofocus="autofocus" name="username" placeholder="用户名" required>
+				<input type="password" name="password" placeholder="密码" required>
 				{% for message in get_flashed_messages() %}
 				<div>{{message}}</div>
 				{% endfor%}
@@ -40,19 +39,19 @@
 	<footer>
 		<div class="info">
 			<ul>
-				<a href="#">
+				<a href="{{ url_for('auth.login') }}">
 					<li>中小型企业人力资源管理信息系统</li>
 				</a>
-				<a href="#">
+				<a href="http://www.github.com/hekun97/MIS">
 					<li>帮助与反馈</li>
 				</a>
-				<a href="#">
+				<a href="http://www.github.com/hekun97/MIS">
 					<li>联系我们</li>
 				</a>
 			</ul>
 		</div>
 		<div class="copyright">
-			&copy; Copyright. All rights reserved. Design by <a href="http://www.github.com/hekun97/">hekun_zongyan</a>
+			&copy; Copyright. All rights reserved. Design by <a href="http://www.github.com/hekun97/MIS">hekun_zongyan</a>
 		</div>
 	</footer>
 </body>
