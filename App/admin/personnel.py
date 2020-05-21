@@ -82,6 +82,7 @@ def show():
     list = posts[pager_obj.start:pager_obj.end]
     html = pager_obj.page_html()
     return render_template('admin/personnel/show.html', list=list, html=html)
+
 # 展示员工详细信息
 @bp.route('/<int:id>/show_one_more')
 @login_required

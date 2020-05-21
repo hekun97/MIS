@@ -33,7 +33,7 @@
 				<p>
 					<div class="form-group col-sm-offset-2">
 						<label for="exampleInputName2">职位描述</label>
-						<textarea class="form-control" rows="3" cols="22" style="resize:none" name="pt_describe">{{ request.form['pt_describe'] or post['pt_describe'] }}</textarea>
+						<textarea class="form-control" rows="3" cols="22" style="resize:none" name="pt_describe" required>{{ request.form['pt_describe'] or post['pt_describe'] }}</textarea>
 					</div>
 				</p>
 			</div>

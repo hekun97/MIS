@@ -19,7 +19,6 @@ sql = '''SELECT * FROM company'''
 def home():
     db = get_db()
     posts = db.execute(
-        # 使用count()函数计算人数
         sql +
         '''
         WHERE cp_level='首页信息'
@@ -139,11 +138,6 @@ def notice():
                 ORDER BY cp_created DESC
                 ''', (name,)
             ).fetchall()
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            posts), request.path, request.args, per_page_count=10)
-        posts = posts[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/notice/show.html', posts=posts, html=html)
     else:
         posts = db.execute(
             nt_sql +
@@ -151,21 +145,24 @@ def notice():
             ORDER BY cp_created DESC
             '''
         ).fetchall()
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            posts), request.path, request.args, per_page_count=10)
-        posts = posts[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/notice/show.html', posts=posts, html=html)
+    # 分页
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    posts = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('admin/notice/show.html', posts=posts, html=html)
 
 # 展示详细的通知详情
-@bp.route('/show_more_notice', methods=('GET', 'POST'))
-def show_more_notice():
+@bp.route('/<int:id>/show_more_notice', methods=('GET', 'POST'))
+@login_required
+def show_more_notice(id):
+    get_post(id)
     db = get_db()
     posts = db.execute(
         nt_sql +
         '''
-        ORDER BY cp_created DESC
-        '''
+        AND  c.id=?
+        ''',(id,)
     ).fetchall()
     return render_template('admin/notice/show_more.html', posts=posts)
 
@@ -176,19 +173,25 @@ def create_notice():
     if request.method == 'POST':
         cp_title = request.form['cp_title']
         cp_body = request.form['cp_body']
-        # 返回单个元组
-        post = db.execute(
+        author_id = g.user['id']
+        # 校验
+        error = None
+        if db.execute(
+            sql +
             '''
-            SELECT id FROM user WHERE username=?
-            ''', (g.user['username'],)
-        ).fetchone()
-        author_id = post[0]
-        db.execute(
-            '''
-            INSERT INTO company (cp_title,cp_body,author_id) VALUES (?,?,?)
-            ''', (cp_title, cp_body, author_id)
-        )
-        db.commit()
+            WHERE cp_title = ? 
+            ''', (cp_title,)
+        ).fetchone() is not None:   
+            error = '通知信息名称 {} 已经被使用！'.format(cp_title)
+        if error is not None:
+            flash(error)
+        else:
+            db.execute(
+                '''
+                INSERT INTO company (cp_title,cp_body,author_id) VALUES (?,?,?)
+                ''', (cp_title, cp_body, author_id)
+            )
+            db.commit()
         return redirect(url_for('company.notice'))
     # 默认进入添加页面
     else:
@@ -204,23 +207,16 @@ def update_notice(id):
     if request.method == 'POST':
         cp_title = request.form['cp_title']
         cp_body = request.form['cp_body']
-        author = db.execute(
-            '''
-            SELECT id FROM user WHERE username=?
-            ''', (g.user['username'],)
-        ).fetchone()
-        author_id = author[0]
+        author_id = g.user['id']
         # 校验
         error = None
-        if not cp_title:
-            error = '请填写通知信息！'
-        elif db.execute(
+        if db.execute(
             sql +
             '''
             WHERE cp_title = ? AND id != ?
             ''', (cp_title, id)
         ).fetchone() is not None:
-            error = '通知信息名称 {} 已经被使用.'.format(cp_title)
+            error = '通知信息名称 {} 已经被使用！'.format(cp_title)
         if error is not None:
             flash(error)
         else:

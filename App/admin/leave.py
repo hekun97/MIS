@@ -22,73 +22,39 @@ def allow():
                 '''
                 SELECT * FROM leave WHERE username LIKE ? AND allow_level!="未批复"
                 ''', (name,)
-            )
-            li = []
-            for post in posts:
-                li.append(post)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/leave/allow.html', list=list, html=html)
+            ).fetchall()
         # 按请假类型搜索
         elif search_name=='按请假类型搜索':
             posts = db.execute(
                 '''
                 SELECT * FROM leave WHERE leave_name LIKE ? AND allow_level!="未批复"
                 ''', (name,)
-            )
-            li = []
-            for post in posts:
-                li.append(post)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/leave/allow.html', list=list, html=html)
+            ).fetchall()
         # 按批复人搜索
         elif search_name=='按批复人搜索':
             posts = db.execute(
                 '''
                 SELECT * FROM leave WHERE allow_name LIKE ? AND allow_level!="未批复"
                 ''', (name,)
-            )
-            li = []
-            for post in posts:
-                li.append(post)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/leave/allow.html', list=list, html=html)
+            ).fetchall()
         # 按批复状态搜索
         elif search_name=='按批复状态搜索':
             posts = db.execute(
                 '''
                 SELECT * FROM leave WHERE allow_level LIKE ? AND allow_level!="未批复"
                 ''', (name,)
-            )
-            li = []
-            for post in posts:
-                li.append(post)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/leave/allow.html', list=list, html=html)
+            ).fetchall()
     # 默认状态
     else:
         posts = db.execute(
             'SELECT * FROM leave WHERE allow_level!="未批复"'
-        )
-        li = []
-        for post in posts:
-            li.append(post)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/leave/allow.html', list=list, html=html)
+        ).fetchall()
+    # 分页
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    posts = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('admin/leave/allow.html', posts=posts, html=html)
 
 # 未批准请假 路由
 @bp.route('/not_allow', methods=('GET', 'POST'))
@@ -102,42 +68,24 @@ def not_allow():
             posts = db.execute(
                 'SELECT * FROM leave WHERE username LIKE ? AND allow_level="未批复"', (
                     name,)
-            )
-            li = []
-            for post in posts:
-                li.append(post)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/leave/not_allow.html',  list=list, html=html)
+            ).fetchall()
         # 按请假类型搜索
         elif search_name=='按请假类型搜索':
             posts = db.execute(
                 'SELECT * FROM leave WHERE leave_name LIKE ? AND allow_level="未批复"', (
                     name,)
-            )
-            li = []
-            for post in posts:
-                li.append(post)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('admin/leave/not_allow.html',  list=list, html=html)
+            ).fetchall()
     else:
         db = get_db()
         posts = db.execute(
             'SELECT * FROM leave WHERE allow_level="未批复"'
-        )
-        li = []
-        for post in posts:
-            li.append(post)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/leave/not_allow.html',  list=list, html=html)
+        ).fetchall()
+    # 分页
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    posts = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('admin/leave/not_allow.html',  posts=posts, html=html)
 
 
 # 请假操作 路由
@@ -150,20 +98,14 @@ def not_allow_describe(id):
         allow_level = request.form['allow_level']
         not_allow_describe = request.form['not_allow_describe']
         db = get_db()
-        # 添加校验
-        error = None
-        if not not_allow_describe:
-            error = '请填写拒绝理由。'
-        if error is None:
-            # 将值插入到数据库
-            db.execute(
-                'UPDATE leave SET allow_name = ?, allow_level = ?,not_allow_describe=?'
-                ' WHERE id = ?',
-                (allow_name, allow_level, not_allow_describe, id)
-            )
-            db.commit()
-            return redirect(url_for('leave.not_allow'))
-        flash(error)
+        # 将值插入到数据库
+        db.execute(
+            'UPDATE leave SET allow_name = ?, allow_level = ?,not_allow_describe=?'
+            ' WHERE id = ?',
+            (allow_name, allow_level, not_allow_describe, id)
+        )
+        db.commit()
+        return redirect(url_for('leave.not_allow'))
     return render_template('admin/leave/level.html')
 
 

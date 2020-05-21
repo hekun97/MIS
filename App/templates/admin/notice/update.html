@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <title>添加主页信息</title>
 
-	<!-- 导入bootstrap -->
-	{% include 'link_js.html' ignore missing  %}
+    <!-- 导入bootstrap -->
+    {% include 'link_js.html' ignore missing  %}
 
 </head>
 
@@ -15,7 +15,7 @@
         <li><a href="{{ url_for('company.home')}} ">主页</a></li>
         <li><a href="{{ url_for('company.home')}}">主页管理</a></li>
         <li class="active">修改主页</li>
-      </ol>
+    </ol>
     <hr>
     <div class="container-fluid">
         <form class="form-inline" method="post">
@@ -24,24 +24,26 @@
                 <p>
                     <div class="form-group col-sm-offset-2">
                         <label for="exampleInputEmail2">主页信息名称</label>
-                        <input type="text" name='cp_title' class="form-control" value="{{ request.form['cp_title'] or post['cp_title'] }}"
-                        required>
+                        <input type="text" name='cp_title' class="form-control"
+                            value="{{ request.form['cp_title'] or post['cp_title'] }}" required>
                     </div>
                 </p>
             </div>
             <!-- 第二行 -->
-			<div class="col-sm-offset-2 col-sm-10">
-				<p>
-					<div class="form-group col-sm-offset-2">
-						<label for="exampleInputName2">主页信息描述</label>
-						<textarea class="form-control" rows="3" cols="22" style="resize:none" name="cp_body">{{ request.form['cp_body'] or post['cp_body'] }}</textarea>
-					</div>
-				</p>
-			</div>
-            <!-- 错误信息 -->
+            <div class="col-sm-offset-2 col-sm-10">
+                <p>
+                    <div class="form-group col-sm-offset-2">
+                        <label for="exampleInputName2">主页信息描述</label>
+                        <textarea class="form-control" rows="3" cols="22" style="resize:none" name="cp_body"
+                            required>{{ request.form['cp_body'] or post['cp_body'] }}</textarea>
+                    </div>
+                </p>
+            </div>
+            <!-- 错误信息开始-->
             {% for message in get_flashed_messages() %}
             <div class="col-sm-offset-2 col-sm-10">{{message}}</div>
             {% endfor%}
+            <!-- 错误信息结束 -->
             <!-- 提交和取消按钮 -->
             <div class="col-md-offset-4 col-md-8">
                 <button type="submit" class="btn btn-primary">提交</button>

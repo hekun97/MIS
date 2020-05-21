@@ -35,7 +35,7 @@
 				<p>
 					<div class="form-group col-sm-offset-2">
 						<label for="exampleInputName2">更多信息描述</label>
-						<textarea class="form-control" rows="3" cols="22" style="resize:none" name="cp_body">{{ request.form['cp_body'] or post['cp_body'] }}</textarea>
+						<textarea class="form-control" rows="3" cols="22" style="resize:none" name="cp_body" required>{{ request.form['cp_body'] or post['cp_body'] }}</textarea>
 					</div>
 				</p>
 			</div>

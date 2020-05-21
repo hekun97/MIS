@@ -4,19 +4,17 @@
 <head>
     <meta charset="utf-8" />
     <title>拒绝请假理由描述</title>
-
-	<!-- 导入bootstrap -->
-	{% include 'link_js.html' ignore missing  %}
-
+    <!-- 导入bootstrap -->
+    {% include 'link_js.html' ignore missing  %}
 </head>
 
 <body>
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
         <li><a href="{{ url_for('company.home')}} ">主页</a></li>
         <li><a href="{{ url_for('leave.allow')}}">请假管理</a></li>
-        <li><a href="{{ url_for('leave.not_allow')}}">未批复请假</a></li>        
+        <li><a href="{{ url_for('leave.not_allow')}}">未批复请假</a></li>
         <li class="active">批复请假</li>
-      </ol>
+    </ol>
     <hr>
     <div class="container-fluid">
         <form class="form-inline" method="post">
@@ -36,16 +34,12 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <p>
                     <div class="form-group col-sm-offset-2">
-                        <label for="exampleInputName2">拒绝理由</label>
+                        <label for="exampleInputName2">批复理由</label>
                         <textarea class="form-control" rows="3" cols="22" id="wd" style="resize:none"
-                            name="not_allow_describe">请填写拒绝理由描述</textarea>
+                            name="not_allow_describe" placeholder="请填写批复理由描述！" required></textarea>
                     </div>
                 </p>
             </div>
-            <!-- 错误信息 -->
-            {% for message in get_flashed_messages() %}
-            <div class="col-sm-offset-2 col-sm-10">{{message}}</div>
-            {% endfor%}
             <!-- 提交和取消按钮 -->
             <div class="col-md-offset-4 col-md-8">
                 <button type="submit" class="btn btn-primary">提交</button>

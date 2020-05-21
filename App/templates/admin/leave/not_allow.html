@@ -17,6 +17,13 @@
 	</ol>
 	<hr>
 	<!-- 路径导航结束 -->
+	<!-- 不存在相应信息开始 -->
+	{% if posts==[] %}
+	<div class="col-sm-offset-1">
+		<h1>没有相关信息！</h1>
+	</div>
+	<!-- 不存在相应信息结束 -->
+	{% else %}
 	<!-- 条件搜索开始 -->
 	<form class="form-inline col-md-offset-7" method="post">
 		<div class="form-group">
@@ -48,7 +55,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for post in list %}
+					{% for post in posts %}
 					<tr>
 						<td>{{ post['id'] }}</td>
 						<td>{{ post['username'] }}</td>
@@ -69,6 +76,7 @@
 			<!-- 分页 -->
 		</div>
 	</div>
+	{% endif %}
 </body>
 
 </html>
