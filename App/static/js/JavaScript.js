@@ -7,6 +7,9 @@ $(document).ready(function () {
   // user
   // 只含有汉字、数字、字母、下划线不能以下划线开头和结尾：
   // ^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$
+  // blur():失去焦点的方法
+  // test() 方法用于检测一个字符串是否匹配某个模式
+  // val() 方法是value的简写，拿到其值
   $('.reg_user').blur(function () {
     if ((/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]+$/).test($(".reg_user").val())) {
       $('.user_hint').html("✔").css("color", "green");
@@ -75,6 +78,7 @@ $(document).ready(function () {
   $('.red_button').click(function () {
     $('form').submit(function (event) {
       if (user == password == money == emaile == Mobile == 1) {} else {
+        // 阻止表单提交事件
         event.preventDefault();
         $('.missing').html('<div class="missing alert alert-danger" role="alert">请按要求填写表单</div>')
 

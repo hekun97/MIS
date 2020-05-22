@@ -11,8 +11,8 @@
 <body>
     <!-- 路径导航开始 -->
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
-        <li><a href="{{ url_for('company.home')}} ">主页</a></li>
-        <li><a href="{{ url_for('company.notice')}}">通知管理</a></li>
+        <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
+        <li><a href="{{ url_for('company_user.notice_user')}}">通知管理</a></li>
         <li class="active">查看通知信息</li>
     </ol>
     <hr>
@@ -20,8 +20,7 @@
     <!-- 条件搜索开始 -->
     {% if posts==[] %}
     <div class="col-sm-offset-1">
-        <h1>还没有通知信息哟！</h1>
-        <a href="{{ url_for('company.create_notice') }}">点击添加通知信息</a>
+        <h1>没有相关信息！</h1>
     </div>
     {% else %}
     <form class="form-inline col-md-offset-7" method="post">
@@ -54,7 +53,7 @@
                     <tr>
                         <td>{{ post['id'] }}</td>
                         <td> <a
-                                href="{{ url_for('company.show_more_notice', id=post['id']) }}">{{ post['cp_title'] }}</a>
+                                href="{{ url_for('company_user.show_more_notice_user', id=post['id']) }}">{{ post['cp_title'] }}</a>
                         </td>
                         <td>{{ post['username'] }}</td>
                         <td>{{ post['cp_created'].strftime('%Y-%m-%d') }}</td>

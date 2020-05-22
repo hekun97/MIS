@@ -11,11 +11,15 @@
 </head>
 
 <body>
+    <!-- 路径导航开始 -->
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
         <li><a href="{{ url_for('company.home')}} ">主页</a></li>
         <li><a href="{{ url_for('company.notice')}}">通知管理</a></li>
         <li class="active">通知详细</li>
     </ol>
+    <!-- 路径导航结束 -->
+    <hr>
+    <!-- 主体部分开始 -->
     <div class="col-sm-offset-1 col-sm-10" style="background-color:white;">
         {% for post in posts %}
         <h2 class="col-sm-offset-4">{{ post['cp_title'] }}</h2>
@@ -32,6 +36,7 @@
 
         {% endfor %}
     </div>
+    <!-- 主体部分结束 -->
 </body>
 
 </html>

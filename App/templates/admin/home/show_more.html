@@ -7,23 +7,41 @@
 
 	<!-- 导入bootstrap -->
 	{% include 'link_js.html' ignore missing  %}
-
+    <!-- 导入自适应高度代码 -->
+    <script src="{{url_for('static', filename='js/textarea.js')}}"></script>
 </head>
+<style>
+    .bk:focus {
+        outline: none;
+        border: 0px;
+        /*跟进textarea背景颜色来定*/
+    }
+    .bk {
+        background-color: white;
+        border: 0px;
+    }
+</style>
 <body>
+    <!-- 路径导航开始 -->
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
         <li><a href="{{ url_for('company.home')}} ">主页</a></li>
         <li><a href="{{ url_for('company.home')}}">主页管理</a></li>
         <li class="active">了解更多</li>
       </ol>
+      <!--路径导航结束 -->
+      <hr>
+      <!-- 巨幕开始 -->
     <div class="jumbotron col-sm-offset-1 col-sm-11" style="background-color:white;">
         {% for post in posts %}
         <h2>{{ post['cp_title'] }}</h2>
-        <pre>{{ post['cp_body'] }}</pre>
+        <textarea class="bk" cols="120" style="resize:none" readonly >{{ post['cp_body'] }}</textarea>
+        <br>
         <p>
             <a class="btn btn-warning btn-lg" href="{{ url_for('company.update_more', id=post['id']) }}" role="button">修改</a>
         </p>
         {% endfor %}
     </div>
+    <!-- 巨幕结束 -->
 </body>
 
 </html>

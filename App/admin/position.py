@@ -7,12 +7,16 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from App.auth import login_required
 from App.db import get_db
 from App.page_utils import Pagination
+from App.admin.level_judge import judge
 
 bp = Blueprint('position', __name__)
 
 # 展示员工 路由
 @bp.route('/show_pt', methods=('GET','POST'))
+@login_required
 def show_pt():
+    # 判断用户权限
+    judge(g.user['level'])
     if request.method == 'POST':
         pt_name=request.form['pt_name']
         db = get_db()
@@ -51,7 +55,10 @@ def show_pt():
 
 # 添加职位 路由
 @bp.route('/create_pt', methods=('GET', 'POST'))
+@login_required
 def create_pt():
+    # 判断用户权限
+    judge(g.user['level'])
     if request.method == 'POST':
         pt_name = request.form['pt_name']
         pt_describe = request.form['pt_describe']
@@ -80,6 +87,8 @@ def create_pt():
 @bp.route('/<int:id>/update_pt', methods=('GET', 'POST'))
 @login_required
 def update_pt(id):
+    # 判断用户权限
+    judge(g.user['level'])
     # 拿到数据库中的id，pt_name,pt_describe
     post = get_post(id)
     if request.method == 'POST':
@@ -111,6 +120,8 @@ def update_pt(id):
 @bp.route('/<int:id>/delete_pt', methods=('POST',))
 @login_required
 def delete_pt(id):
+    # 判断用户权限
+    judge(g.user['level'])
     get_post(id)
     db = get_db()
     db.execute('DELETE FROM position WHERE id = ?', (id,))

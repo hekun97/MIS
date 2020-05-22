@@ -68,11 +68,6 @@ def notice_user():
                 ORDER BY cp_created DESC
                 ''', (name,)
             ).fetchall()
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            posts), request.path, request.args, per_page_count=10)
-        posts = posts[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/notice/show.html', posts=posts, html=html)
     else:
         posts = db.execute(
             nt_sql +
@@ -80,45 +75,34 @@ def notice_user():
             ORDER BY cp_created DESC
             '''
         ).fetchall()
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            posts), request.path, request.args, per_page_count=10)
-        posts = posts[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('user/notice/show.html', posts=posts, html=html)
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    posts = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('user/notice/show.html', posts=posts, html=html)
+    
 # 展示详细的通知详情
-@bp.route('/show_more_notice', methods=('GET', 'POST'))
-def show_more_notice():
+@bp.route('/<int:id>/show_more_notice_user', methods=('GET', 'POST'))
+def show_more_notice_user(id):
+    get_post(id)
     db = get_db()
     posts = db.execute(
+          nt_sql +
         '''
-        SELECT c.id, cp_title, cp_body, cp_created, username
-        FROM company c JOIN user u ON (c.author_id = u.id AND cp_level='普通内容')
-        ORDER BY cp_created DESC
-        '''
+        AND  c.id=?
+        ''',(id,)
     ).fetchall()
-    return render_template('admin/notice/show_more.html', posts=posts)
+    return render_template('user/notice/show_more.html', posts=posts)
 
-# 添加通知信息 路由
-@bp.route('/create_notice', methods=('GET', 'POST'))
-def create_notice():
-    db = get_db()
-    if request.method == 'POST':
-        cp_title = request.form['cp_title']
-        cp_body = request.form['cp_body']
-        # 返回单个元组
-        post = db.execute(
-            '''
-            SELECT id FROM user WHERE username=?
-            ''', (g.user['username'],)
-        ).fetchone()
-        author_id = post[0]
-        db.execute(
-            '''
-            INSERT INTO company (cp_title,cp_body,author_id) VALUES (?,?,?)
-            ''', (cp_title, cp_body, author_id)
-        )
-        db.commit()
-        return redirect(url_for('company.notice'))
-    # 默认进入添加页面
-    else:
-        return render_template('admin/notice/create.html')
+# 根据id值拿到相应的数据
+def get_post(id):
+    post = get_db().execute(
+        'SELECT *'
+        ' FROM company'
+        ' WHERE id = ?',
+        (id,)
+    ).fetchone()
+
+    if post is None:
+        abort(404, "Post 的 id值 {0} 不存在！".format(id))
+    return post

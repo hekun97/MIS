@@ -4,18 +4,21 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<!-- 导入bootstrap -->
+	<!-- 导入公共引用 -->
 	{% include 'link_js.html' ignore missing  %}
 
 </head>
 
 <body>
+	<!-- 路径导航开始 -->
 	<ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
 		<li><a href="{{ url_for('company.home')}} ">主页</a></li>
 		<li><a href="{{ url_for('department.show_dp')}}">部门管理</a></li>
 		<li class="active">查看部门</li>
 	</ol>
+	<!-- 路径导航结束 -->
 	<hr>
+	<!-- 表单开始 -->
 	<form class="form-inline col-md-offset-9" method="post">
 		<div class="form-group">
 			<!-- 查找员工 -->
@@ -23,7 +26,9 @@
 		</div>
 		<button type="submit" class="btn btn-primary">搜索</button>
 	</form>
+	<!-- 表单结束 -->
 	<br>
+	<!-- 表格开始 -->
 	<div class="container">
 		<div class="row">
 			<table class="table table-bordered table-hover">
@@ -55,12 +60,12 @@
 					{% endfor %}
 				</tbody>
 			</table>
-			<!-- 分页 -->
+			<!-- 导入分页 -->
 			{% include 'page.html' ignore missing  %}
-			<!-- 分页 -->
 			<hr />
 		</div>
 	</div>
+	<!-- 表格结束 -->
 </body>
 
 </html>

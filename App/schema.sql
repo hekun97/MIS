@@ -61,7 +61,7 @@ CREATE TABLE company(
   cp_title TEXT NOT NULL,
   cp_body TEXT NOT NULL,
   cp_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  author_id TEXT,
+  author_id INTEGER,
   cp_level TEXT DEFAULT '普通内容'
 );
 

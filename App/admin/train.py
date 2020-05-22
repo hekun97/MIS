@@ -6,12 +6,16 @@ from werkzeug.exceptions import abort
 from werkzeug.security import check_password_hash, generate_password_hash
 from App.auth import login_required
 from App.db import get_db
+from App.admin.level_judge import judge
 
 bp = Blueprint('train', __name__)
 
 # 查看培训信息 路由
 @bp.route('/show_train', methods=('GET', 'POST'))
+@login_required
 def show_train():
+    # 判断用户权限
+    judge(g.user['level'])
     db = get_db()
     if request.method == 'POST':
         train_title = request.form['train_title']
@@ -35,7 +39,10 @@ def show_train():
 
 # 添加培训 路由
 @bp.route('/create_train', methods=('GET', 'POST'))
+@login_required
 def create_train():
+    # 判断用户权限
+    judge(g.user['level'])
     if request.method == 'POST':
         train_title = request.form['train_title']
         train_body = request.form['train_body']

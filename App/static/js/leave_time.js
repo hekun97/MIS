@@ -1,4 +1,4 @@
-function huoqu(date1, date2) {
+function huoqu() {
 	var a = document.getElementById("date1").value;
 	var b = document.getElementById("date2").value;
 	var date1 = new Date(a);

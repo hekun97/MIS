@@ -9,12 +9,22 @@
 </head>
 
 <body>
+	<!-- 路径导航开始 -->
 	<ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
-        <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
-        <li><a href="{{  url_for('leave_user.create_leave')}}">请假管理</a></li>
-        <li class="active">请假状态</li>
-      </ol>
-    <hr>
+		<li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
+		<li><a href="{{  url_for('leave_user.create_leave')}}">请假管理</a></li>
+		<li class="active">请假状态</li>
+	</ol>
+	<hr>
+	<!-- 路径导航结束 -->
+	<!-- 不存在相应信息开始 -->
+	{% if posts==[] %}
+	<div class="col-sm-offset-1">
+		<h1>没有相关信息！</h1>
+		<a href="{{ url_for('leave_user.create_leave') }}">点击申请</a>
+	</div>
+	<!-- 不存在相应信息结束 -->
+	{% else %}
 	<!-- 条件搜索开始 -->
 	<form class="form-inline col-md-offset-7" method="post">
 		<div class="form-group">
@@ -30,7 +40,8 @@
 		<button type="submit" class="btn btn-primary">搜索</button>
 	</form>
 	<!-- 条件搜索结束 -->
-	<p></p>
+	<hr>
+	<!-- 表单开始 -->
 	<div class="container">
 		<div class="row">
 			<table class="table table-bordered table-hover">
@@ -50,7 +61,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for post in list %}
+					{% for post in posts %}
 					<tr>
 						<td>{{ post['id'] }}</td>
 						<td>{{ post['username'] }}</td>
@@ -68,11 +79,12 @@
 		{% endfor %}
 		</tbody>
 		</table>
-			<!-- 分页 -->
-			{% include 'page.html' ignore missing  %}
-			<!-- 分页 -->
+		<!-- 分页 -->
+		{% include 'page.html' ignore missing  %}
+		<!-- 分页 -->
 	</div>
-	</div>
+	{% endif %}
+	<!-- 表单结束 -->
 </body>
 
 </html>

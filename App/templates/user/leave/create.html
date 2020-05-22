@@ -4,17 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <title>员工请假页面</title>
-    <!-- 导入bootstrap -->
+    <!-- 导入公共引用 -->
     {% include 'link_js.html' ignore missing  %}
-
+    <!-- 导入width的代码 -->
+    {% include 'width.html' ignore missing  %}
 </head>
 
 <body>
+    <!-- 路径导航开始 -->
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
         <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
         <li><a href="{{ url_for('leave_user.create_leave')}}">请假管理</a></li>
         <li class="active">申请请假</li>
     </ol>
+    <!-- 路径导航结束 -->
     <hr>
     <form class="form-inline" method="post">
         <!-- 第一行-->
@@ -36,7 +39,7 @@
             <p>
                 <div class="form-group">
                     <label for="exampleInputEmail2">请假天数</label>
-                    <input name="leave_time" type="text" class="form-control" id="days" readonly="readonly" style="width: 196px;" />
+                    <input name="leave_time" type="text" class="form-control" id="days" readonly="readonly" id="wd">
                 </div>
                 <div class="form-group col-sm-offset-1">
                     <label for="exampleInputEmail2">请假类型</label>
@@ -58,7 +61,7 @@
                 <div class="form-group">
                     <label for="exampleInputName2">请假理由</label>
                     <textarea name="leave_describe" class="form-control" rows="3" cols="80" style="resize:none;width: 530px;"
-                        placeholder="请填写请假理由"></textarea>
+                        placeholder="请填写请假理由" required></textarea>
                 </div>
             </p>
         </div>

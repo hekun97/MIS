@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from App.auth import login_required
 from App.db import get_db
 from App.page_utils import Pagination
+from App.admin.level_judge import judge
 
 bp = Blueprint('company', __name__)
 sql = '''SELECT * FROM company'''
@@ -16,7 +17,10 @@ sql = '''SELECT * FROM company'''
 '''
 # 展示主页信息 路由
 @bp.route('/home', methods=('GET', 'POST'))
+@login_required
 def home():
+    # 判断用户权限
+    judge(g.user['level'])
     db = get_db()
     posts = db.execute(
         sql +
@@ -30,6 +34,8 @@ def home():
 @bp.route('/<int:id>/update_home', methods=('GET', 'POST'))
 @login_required
 def update_home(id):
+    # 判断用户权限
+    judge(g.user['level'])
     # 拿到数据库中的值
     post = get_post(id)
     if request.method == 'POST':
@@ -62,7 +68,10 @@ def update_home(id):
 
 # 展示更多信息 路由
 @bp.route('/show_more', methods=('GET', 'POST'))
+@login_required
 def show_more():
+    # 判断用户权限
+    judge(g.user['level'])
     db = get_db()
     posts = db.execute(
         # 使用count()函数计算人数
@@ -77,6 +86,8 @@ def show_more():
 @bp.route('/<int:id>/update_more', methods=('GET', 'POST'))
 @login_required
 def update_more(id):
+    # 判断用户权限
+    judge(g.user['level'])
     # 拿到数据库中的值
     post = get_post(id)
     if request.method == 'POST':
@@ -117,7 +128,10 @@ nt_sql = '''
         '''
 # 展示通知信息 路由
 @bp.route('/notice', methods=('GET', 'POST'))
+@login_required
 def notice():
+    # 判断用户权限
+    judge(g.user['level'])
     db = get_db()
     if request.method == 'POST':
         search_name = request.form['search_name']
@@ -127,6 +141,14 @@ def notice():
                 nt_sql +
                 '''
                 AND cp_title LIKE ?
+                ORDER BY cp_created DESC
+                ''', (name,)
+            ).fetchall()
+        if search_name=='按发布人搜索':
+            posts = db.execute(
+                nt_sql +
+                '''
+                AND username LIKE ?
                 ORDER BY cp_created DESC
                 ''', (name,)
             ).fetchall()
@@ -156,6 +178,8 @@ def notice():
 @bp.route('/<int:id>/show_more_notice', methods=('GET', 'POST'))
 @login_required
 def show_more_notice(id):
+    # 判断用户权限
+    judge(g.user['level'])
     get_post(id)
     db = get_db()
     posts = db.execute(
@@ -168,13 +192,16 @@ def show_more_notice(id):
 
 # 添加通知信息 路由
 @bp.route('/create_notice', methods=('GET', 'POST'))
+@login_required
 def create_notice():
+    # 判断用户权限
+    judge(g.user['level'])
     db = get_db()
     if request.method == 'POST':
         cp_title = request.form['cp_title']
         cp_body = request.form['cp_body']
         author_id = g.user['id']
-        # 校验
+        # 校验                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         error = None
         if db.execute(
             sql +
@@ -185,6 +212,7 @@ def create_notice():
             error = '通知信息名称 {} 已经被使用！'.format(cp_title)
         if error is not None:
             flash(error)
+            return redirect(url_for('company.create_notice'))
         else:
             db.execute(
                 '''
@@ -201,6 +229,8 @@ def create_notice():
 @bp.route('/<int:id>/update_notice', methods=('GET', 'POST'))
 @login_required
 def update_notice(id):
+    # 判断用户权限
+    judge(g.user['level'])
     # 拿到数据库中的值
     db = get_db()
     post = get_post(id)
@@ -233,6 +263,8 @@ def update_notice(id):
 @bp.route('/<int:id>/delete_notice', methods=('POST',))
 @login_required
 def delete_notice(id):
+    # 判断用户权限
+    judge(g.user['level'])
     get_post(id)
     db = get_db()
     db.execute('DELETE FROM company WHERE id = ?', (id,))
@@ -240,8 +272,6 @@ def delete_notice(id):
     return redirect(url_for('company.notice'))
 
 # 根据id值拿到相应的数据
-
-
 def get_post(id):
     post = get_db().execute(
         'SELECT *'

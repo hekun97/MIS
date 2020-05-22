@@ -18,7 +18,7 @@
 	<hr>
 	<!-- 路径导航结束 -->
 	<!-- 不存在相应信息开始 -->
-	{% if posts==[] %}
+	{% if posts==[] %} 
 	<div class="col-sm-offset-1">
 		<h1>没有相关信息！</h1>
 	</div>
@@ -65,7 +65,7 @@
 						<td>{{ post['leave_time'] }}</td>
 						<td>{{ post['leave_describe'] }}</td>
 						<td>
-							<a class="action" href="{{ url_for('leave.not_allow_describe', id=post['id']) }}">批复</a>
+							<a href="{{ url_for('leave.not_allow_describe', id=post['id']) }}">批复</a>
 						</td>
 					</tr>
 					{% endfor %}

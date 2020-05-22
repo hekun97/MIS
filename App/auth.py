@@ -27,14 +27,12 @@ def login():
         elif not check_password_hash(user['password'], password):
             error = '密码有误。'
         if error is None:
+            session.clear()
+            session['user_id'] = user['id']            
             if db.execute(
                     'SELECT id FROM user WHERE username = ? AND level = "管理员"', (username,)).fetchone() is not None:
-                session.clear()
-                session['user_id'] = user['id']
                 return redirect(url_for('system.index'))
             else:
-                session.clear()
-                session['user_id'] = user['id']
                 return redirect(url_for('system.user'))
 
         flash(error)

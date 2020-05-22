@@ -1,6 +1,5 @@
 var user = 1;
 var password = 1;
-var money = 1;
 var emaile = 1;
 var Mobile = 1;
 $(document).ready(function () {
@@ -28,17 +27,6 @@ $(document).ready(function () {
         }
     });
 
-    // money
-    // 只包含正数
-    $('.reg_money').blur(function () {
-        if ((/^(0|[1-9][0-9]*)(\.\d+)?$/).test($(".reg_money").val())) {
-            $('.money_hint').html("✔").css("color", "green");
-            money = 1;
-        } else {
-            $('.money_hint').html("×").css("color", "red");
-            money = 0;
-        }
-    });
 
 
     // Email
@@ -74,7 +62,10 @@ $(document).ready(function () {
     // click
     $('.red_button').click(function () {
         $('form').submit(function (event) {
-            if (user == password == money == emaile == Mobile == 1) {} else {
+            if (user == password == emaile == Mobile == 1) {
+
+            } else {
+                //组织表单提交
                 event.preventDefault();
                 $('.missing').html('<div class="missing alert alert-danger" role="alert">请按要求填写表单</div>')
             }

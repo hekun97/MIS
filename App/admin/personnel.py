@@ -9,6 +9,7 @@ from App.db import get_db
 from App.page_utils import Pagination
 from App.page_utils import page_same
 import re
+from App.admin.level_judge import judge
 bp = Blueprint('personnel', __name__)
 
 # 拿到员工的相应信息
@@ -25,6 +26,8 @@ SELECT u.id,u.username,u.password,u.sex,u.email,u.tel,u.level,u.money,u.birthday
 @bp.route('/show', methods=('GET', 'POST'))
 @login_required
 def show():
+    # 判断用户权限
+    judge(g.user['level'])
     db = get_db()
     if request.method == 'POST':
         search_name = request.form['search_name']
@@ -44,7 +47,7 @@ def show():
         elif search_name == '按权限搜索':
             posts = db.execute(
                 sql + '''WHERE u.level LIKE ?''', (name,)
-            )
+            ).fetchall()
         # 按职位搜索
         elif search_name == '按职位搜索':
             posts = db.execute(
@@ -62,9 +65,6 @@ def show():
             ).fetchall()
     # 默认条件下展示所有员工
     else:
-        # 判断用户权限
-        if g.user['level'] == '员工':
-            return '你的权限不够！'
         posts = db.execute(sql).fetchall()
     '''
     current_page——表示当前页。
@@ -88,8 +88,7 @@ def show():
 @login_required
 def show_one_more(id):
     # 判断用户权限
-    if g.user['level'] == '员工':
-        return '你的权限不够！'
+    judge(g.user['level'])
     get_post(id)
     db = get_db()
     posts = db.execute(
@@ -102,10 +101,9 @@ def show_one_more(id):
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
-    db = get_db()
     # 判断用户权限
-    if g.user['level'] == '员工':
-        return '你的权限不够！'
+    judge(g.user['level'])
+    db = get_db()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -203,8 +201,7 @@ def create():
 @login_required
 def update(id):
     # 判断用户权限
-    if g.user['level'] == '员工':
-        return '你的权限不够！'
+    judge(g.user['level'])
     # 拿到数据库中的id，username,level
     post = get_post(id)
     db = get_db()
@@ -311,8 +308,7 @@ def update(id):
 @login_required
 def delete(id):
     # 判断用户权限
-    if g.user['level'] == '员工':
-        return '你的权限不够！'
+    judge(g.user['level'])
     get_post(id)
     db = get_db()
     db.execute('DELETE FROM user WHERE id = ?', (id,))

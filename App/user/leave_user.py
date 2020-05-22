@@ -39,10 +39,10 @@ def create_leave():
 # 请假状态 路由
 @bp.route('/level_leave', methods=('GET', 'POST'))
 def level_leave():
+    db = get_db()
     if request.method == 'POST':
         search_name = request.form['search_name']
         name = '%'+request.form['name']+'%'
-        db = get_db()
         if search_name == '按请假类型搜索':
             posts = db.execute(
                 'SELECT * FROM leave WHERE leave_name LIKE ? AND username=? ORDER BY id DESC', (
@@ -58,22 +58,16 @@ def level_leave():
                 'SELECT * FROM leave WHERE allow_level LIKE ? AND username=? ORDER BY id DESC', (
                     name, g.user['username'],)
             ).fetchall()
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            posts), request.path, request.args, per_page_count=10)
-        list = posts[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('user/leave/level.html', list=list, html=html)
     else:
-        db = get_db()
         posts = db.execute(
             'SELECT * FROM leave WHERE username=? ORDER BY id DESC', (
                 g.user['username'],)
         ).fetchall()
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            posts), request.path, request.args, per_page_count=10)
-        list = posts[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('user/leave/level.html', list=list, html=html)
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    posts = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('user/leave/level.html', posts=posts, html=html)
 
 # 根据id值拿到相应的数据
 

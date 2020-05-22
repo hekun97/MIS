@@ -5,8 +5,12 @@
     <meta charset="utf-8" />
     <title>修改员工信息</title>
 
-    <!-- 导入bootstrap -->
+    <!-- 导入公共引用 -->
     {% include 'link_js.html' ignore missing  %}
+    <!-- 导入width的代码 -->
+    {% include 'width.html' ignore missing  %}
+    <!-- 导入正则表达式的验证 -->
+    <script type="text/javascript" src="{{url_for('static', filename='js/user_judge.js')}}"></script>
 
 </head>
 
@@ -21,14 +25,16 @@
     <!-- 路径导航结束 -->
     <div class="container-fluid">
         <form class="form-inline" method="post">
-
             <!-- 第一行-->
             <div class="col-sm-offset-2 col-sm-10">
                 <p>
                     <div class="form-group">
-                        <label for="exampleInputEmail2">员工姓名</label>
-                        <input type="text" name='username' class="form-control"
-                            value="{{ request.form['username'] or post['username'] }}" required>
+                        <label for="exampleInputEmail2">你的姓名</label>
+                        <div id="wd2" class="form-group">
+                            <input type="text" name='username' class="reg_user form-control" id="wd"
+                                value="{{ request.form['username'] or post['username'] }}" required>
+                            <span class="user_hint"></span>
+                        </div>
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">员工性别</label>
@@ -48,14 +54,18 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <p>
                     <div class="form-group">
-                        <label for="exampleInputEmail2">你的邮箱</label>
-                        <input type="email" name="email" class="form-control"
-                            value="{{ request.form['email'] or post['email'] }}" required>
+                        <label for="exampleInputName2">你的邮箱</label>
+                        <div id="wd2" class="form-group">
+                            <input type="email" id="wd" class="reg_email form-control" name="email"
+                                value="{{ request.form['email'] or post['email'] }}" required>
+                            <span class="email_hint"></span>
+                        </div>
                     </div>
                     <div class="form-group col-sm-offset-1">
                         <label for="exampleInputEmail2">你的电话</label>
-                        <input type="text" name="tel" class="form-control"
+                        <input type="text" id="wd" class="reg_mobile form-control" name="tel"
                             value="{{ request.form['tel'] or post['tel'] }}" required>
+                        <span class="mobile_hint"></span>
                     </div>
                 </p>
             </div>
@@ -64,23 +74,29 @@
                 <p>
                     <div class="form-group">
                         <label for="exampleInputName2">出生日期</label>
-                        <input type="date"  class="form-control" name="birthday" value="{{ request.form['birthday'] or post['birthday'] }}"
-                            style="width: 196px;" />
+                        <div id="wd2" class="form-group">
+                            <input type="date" id="wd" class="form-control" name="birthday"
+                                value="{{ request.form['birthday'] or post['birthday'] }}">
+                        </div>
                     </div>
                     <div class="form-group col-sm-offset-1">
-                        <label for="exampleInputName2">员工密码</label>
-                        <input type="password" class="form-control" name="password" placeholder="请输入密码" required>
+                        <label for="exampleInputName2">你的密码</label>
+                        <input type="password" id="wd" class="reg_password form-control" name="password"
+                            placeholder="请输入密码" required>
+                        <span class="password_hint"></span>
                     </div>
                 </p>
             </div>
 
-            <!-- 错误信息 -->
-            {% for message in get_flashed_messages() %}
-            <div class="col-sm-offset-2 col-sm-10">{{message}}</div>
-            {% endfor%}
+            <!-- 错误信息开始 -->
+            <div class=" col-sm-offset-2 col-sm-7">
+                <div class="missing"></div>
+                {% include 'missing.html' ignore missing  %}
+            </div>
+            <!-- 错误信息结束 -->
             <!-- 提交和取消按钮 -->
             <div class="col-md-offset-4 col-md-10">
-                <button type="submit" class="btn btn-primary">提交</button>
+                <button type="submit" class="red_button btn btn-primary">提交</button>
                 <button type="reset" class="btn btn-danger col-md-offset-1">取消</button>
             </div>
         </form>
