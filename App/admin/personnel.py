@@ -148,7 +148,7 @@ def create():
         if db.execute(
             'SELECT id FROM user WHERE username = ?', (username,)
         ).fetchone() is not None:
-            error = '用户名 {} 已经被注册！'.format(username)
+            error = '用户名{}已经被注册！'.format(username)
         # 验证部门
         elif dp_name == '请先添加部门':
             error = '请先添加部门'
@@ -250,7 +250,7 @@ def update(id):
             'SELECT id FROM user WHERE username = ? AND id != ?', (
                 username, id)
         ).fetchone() is not None:
-            error = '用户名 {} 已经被注册.'.format(username)
+            error = '用户名{}已经被注册.'.format(username)
         if error is not None:
             flash(error)
         else:

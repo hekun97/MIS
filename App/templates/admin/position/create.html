@@ -37,10 +37,11 @@
 					</div>
 				</p>
 			</div>
-            <!-- 错误信息 -->
-            {% for message in get_flashed_messages() %}
-            <div class="col-sm-offset-2 col-sm-10">{{message}}</div>
-            {% endfor%}
+            <!-- 错误信息开始 -->
+            <div class=" col-sm-offset-3 col-sm-5">
+                {% include 'missing.html' ignore missing  %}
+            </div>
+            <!-- 错误信息结束 -->
             <!-- 提交和取消按钮 -->
             <div class="col-md-offset-4 col-md-8">
                 <button type="submit" class="btn btn-primary">提交</button>

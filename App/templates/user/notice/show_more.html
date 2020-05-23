@@ -7,8 +7,11 @@
 
     <!-- 导入bootstrap -->
     {% include 'link_js.html' ignore missing  %}
-
+    <!-- 导入自适应高度代码 -->
+    <script src="{{url_for('static', filename='js/textarea.js')}}"></script>
 </head>
+<!-- 导入textarea样式 -->
+{% include 'textarea.html' ignore missing  %}
 
 <body>
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
@@ -19,7 +22,7 @@
     <div class="col-sm-offset-1 col-sm-10" style="background-color:white;">
         {% for post in posts %}
         <h2 class="col-sm-offset-4">{{ post['cp_title'] }}</h2>
-        <pre>{{ post['cp_body'] }}</pre>
+        <textarea class="bk" cols="120" readonly>{{ post['cp_body'] }}</textarea>
         <div class="pull-right">
             <p>发布人：{{ post['username'] }}&nbsp;&nbsp;&nbsp;&nbsp;发布时间：{{ post['cp_created'].strftime('%Y-%m-%d') }}</p>
         </div>

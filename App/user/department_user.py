@@ -22,13 +22,7 @@ def show_user_dp():
             (SELECT COUNT(*) FROM user u WHERE u.dp_id=d.id) AS dp_count
             FROM department d WHERE d.dp_name=?
             ''', (dp_name,)
-        )
-        li = page_same(posts)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('user/department.html', list=list, html=html)
+        ).fetchall()
     else:
         posts = db.execute(
             '''
@@ -36,13 +30,12 @@ def show_user_dp():
             (SELECT COUNT(*) FROM user u WHERE u.dp_id=d.id) AS dp_count
             FROM department d
             '''
-        )
-        li = page_same(posts)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('user/department.html', list=list, html=html)
+        ).fetchall()
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    list = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('user/department.html', list=list, html=html)
 # 展示所有同部门员工
 @bp.route('/show_user_dp_same', methods=('GET', 'POST'))
 def show_user_dp_same():
@@ -66,15 +59,9 @@ def show_user_dp_same():
                 (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name
                 FROM user u WHERE u.dp_id=? AND u.username LIKE ?
                 ''', (g.user['dp_id'], name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/department/show_same.html', list=list, html=html, d_posts=d_posts)
+            ).fetchall()
         # 按性别搜索
-        elif search_name == '按姓名搜索':
+        elif search_name == '按性别搜索':
             posts = db.execute(
                 '''
                 SELECT u.id,u.username,u.sex,u.email,u.tel,
@@ -82,13 +69,7 @@ def show_user_dp_same():
                 (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name
                 FROM user u WHERE u.dp_id=? AND u.sex LIKE ?
                 ''', (g.user['dp_id'], name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/department/show_same.html', list=list, html=html, d_posts=d_posts)
+            ).fetchall()
         # 按职位搜索
         elif search_name == '按职位搜索':
             posts = db.execute(
@@ -98,13 +79,7 @@ def show_user_dp_same():
                 (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name
                 FROM user u WHERE u.dp_id=? AND p_name LIKE ?
                 ''', (g.user['dp_id'], name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/department/show_same.html', list=list, html=html, d_posts=d_posts)
+            ).fetchall()
         # 按所属团队搜索
         elif search_name == '按所属团队搜索':
             posts = db.execute(
@@ -114,14 +89,7 @@ def show_user_dp_same():
                 (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name
                 FROM user u WHERE u.dp_id=? AND t_name LIKE ?
                 ''', (g.user['dp_id'], name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/department/show_same.html', list=list, html=html, d_posts=d_posts)
-
+            ).fetchall()
     else:
         # 拿到同部门同事的参数
         posts=db.execute(
@@ -131,10 +99,9 @@ def show_user_dp_same():
             (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name
             FROM user u WHERE u.dp_id=?
             ''', (g.user['dp_id'],)
-        )
-        li = page_same(posts)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('user/department/show_same.html', list=list, html=html, d_posts=d_posts)
+        ).fetchall()
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    list = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('user/department/show_same.html', list=list, html=html, d_posts=d_posts)

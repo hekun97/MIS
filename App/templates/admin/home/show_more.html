@@ -10,17 +10,8 @@
     <!-- 导入自适应高度代码 -->
     <script src="{{url_for('static', filename='js/textarea.js')}}"></script>
 </head>
-<style>
-    .bk:focus {
-        outline: none;
-        border: 0px;
-        /*跟进textarea背景颜色来定*/
-    }
-    .bk {
-        background-color: white;
-        border: 0px;
-    }
-</style>
+    <!-- 导入textarea样式 -->
+	{% include 'textarea.html' ignore missing  %}
 <body>
     <!-- 路径导航开始 -->
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">

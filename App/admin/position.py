@@ -17,41 +17,29 @@ bp = Blueprint('position', __name__)
 def show_pt():
     # 判断用户权限
     judge(g.user['level'])
+    db = get_db()
     if request.method == 'POST':
         pt_name=request.form['pt_name']
-        db = get_db()
         posts = db.execute(
         '''
             SELECT p.id,p.pt_name,p.pt_describe,
             (SELECT COUNT(*) FROM user u WHERE u.pt_id=p.id) AS pt_count
             FROM position p WHERE p.pt_name=?
         ''',(pt_name,)
-        )
-        li = []
-        for post in posts:
-            li.append(post)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/position/show.html', list=list, html=html)
+        ).fetchall()
     else:
-        db = get_db()
         posts = db.execute(
             '''
             SELECT p.id,p.pt_name,p.pt_describe,
             (SELECT COUNT(*) FROM user u WHERE u.pt_id=p.id) AS pt_count
             FROM position p
             '''
-        )
-        li = []
-        for post in posts:
-            li.append(post)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/position/show.html', list=list, html=html)
+        ).fetchall()
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    list = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('admin/position/show.html', list=list, html=html)
 
 # 添加职位 路由
 @bp.route('/create_pt', methods=('GET', 'POST'))
@@ -59,19 +47,16 @@ def show_pt():
 def create_pt():
     # 判断用户权限
     judge(g.user['level'])
+    db = get_db()
     if request.method == 'POST':
         pt_name = request.form['pt_name']
         pt_describe = request.form['pt_describe']
-        db = get_db()
         # 添加职位校验
         error = None
-        if not pt_name:
-            error = '请填写职位名称.'
-        elif db.execute(
+        if db.execute(
             'SELECT id FROM position WHERE pt_name = ?', (pt_name,)
         ).fetchone() is not None:
-            error = '职位名称： {} 已经被注册。'.format(pt_name)
-
+            error = '职位{}已经被使用！'.format(pt_name)
         if error is None:
             # 将值插入到数据库
             db.execute(
@@ -80,7 +65,8 @@ def create_pt():
             )
             db.commit()
             return redirect(url_for('position.show_pt'))
-        flash(error)
+        else:
+            flash(error)
     return render_template('admin/position/create.html')
 
 # 修改员工 路由
@@ -97,12 +83,10 @@ def update_pt(id):
         db = get_db()
         # 校验
         error = None
-        if not pt_name:
-            error = '请填写职位名称。'
-        elif db.execute(
+        if db.execute(
             'SELECT id FROM position WHERE pt_name = ? AND id != ?', (pt_name,id)
         ).fetchone() is not None:
-            error = '职位 {} 已经被注册.'.format(pt_name)
+            error = '职位{}已经被使用！'.format(pt_name)
         if error is not None:
             flash(error)
         else:
@@ -113,7 +97,6 @@ def update_pt(id):
             )
             db.commit()
             return redirect(url_for('position.show_pt'))
-
     return render_template('admin/position/update.html', post=post)
 
 # 删除职位 蓝图
@@ -122,10 +105,20 @@ def update_pt(id):
 def delete_pt(id):
     # 判断用户权限
     judge(g.user['level'])
-    get_post(id)
+    post=get_post(id)
     db = get_db()
-    db.execute('DELETE FROM position WHERE id = ?', (id,))
-    db.commit()
+    error=None
+    if db.execute(
+        '''
+        SELECT id FROM user WHERE pt_id=?
+        ''',(id,)
+    ).fetchone() is not None:
+        error='删除失败，仍有员工担任职位{}！'.format(post[1])
+    if error is None:
+        db.execute('DELETE FROM position WHERE id = ?', (id,))
+        db.commit()
+    else:
+        flash(error)
     return redirect(url_for('position.show_pt'))
 
 

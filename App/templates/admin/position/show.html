@@ -10,12 +10,15 @@
 </head>
 
 <body>
+	<!-- 路径导航开始 -->
 	<ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
 		<li><a href="{{ url_for('company.home')}} ">主页</a></li>
 		<li><a href="{{ url_for('position.show_pt')}}">职位管理</a></li>
 		<li class="active">职位展示</li>
 	</ol>
+	<!-- 路径导航结束 -->
 	<hr>
+	<!-- 条件搜索开始 -->
 	<form class="form-inline col-md-offset-9" method="post">
 		<div class="form-group">
 			<!-- 查找员工 -->
@@ -23,7 +26,15 @@
 		</div>
 		<button type="submit" class="btn btn-primary">搜索</button>
 	</form>
+	<!-- 条件搜索结束 -->
 	<br>
+	<!-- 错误信息开始 -->
+	<div class=" col-sm-offset-2 col-sm-7">
+		<div class="missing"></div>
+		{% include 'missing.html' ignore missing  %}
+	</div>
+	<!-- 错误信息结束 -->
+	<!--表格主体开始 -->
 	<div class="container">
 		<div class="row">
 			<table class="table table-bordered table-hover">
@@ -55,11 +66,11 @@
 					{% endfor %}
 				</tbody>
 			</table>
-			<!-- 分页 -->
+			<!-- 引用分页 -->
 			{% include 'page.html' ignore missing  %}
-			<!-- 分页 -->
 		</div>
 	</div>
+	<!-- 表格主体结束 -->
 </body>
 
 </html>

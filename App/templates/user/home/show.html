@@ -5,22 +5,25 @@
     <meta charset="utf-8" />
     <title>中小型人力资源管理系统</title>
 
-	<!-- 导入bootstrap -->
-	{% include 'link_js.html' ignore missing  %}
-
+    <!-- 导公共引用 -->
+    {% include 'link_js.html' ignore missing  %}
+    <!-- 导入自适应高度代码 -->
+    <script src="{{url_for('static', filename='js/textarea.js')}}"></script>
 </head>
+<!-- 导入textarea样式 -->
+{% include 'textarea.html' ignore missing  %}
 
 <body>
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
         <li><a href="{{ url_for('company_user.home_user')}} ">主页</a></li>
         <li><a href="{{ url_for('company_user.home_user')}}">主页管理</a></li>
         <li class="active">主页信息</li>
-      </ol>
+    </ol>
     <hr>
     <div class="jumbotron col-sm-offset-1 col-sm-11" style="background-color:white;">
         {% for post in posts %}
         <h2>{{ post['cp_title'] }}</h2>
-        <pre>{{ post['cp_body'] }}</pre>
+        <textarea class="bk" cols="120" readonly>{{ post['cp_body'] }}</textarea>
         <p><a class="btn btn-primary btn-lg" href="{{ url_for('company_user.show_more_user') }}" role="button">了解更多</a>
         </p>
         {% endfor %}

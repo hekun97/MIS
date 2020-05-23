@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<!-- 导入bootstrap -->
+	<!-- 导入公共引用-->
 	{% include 'link_js.html' ignore missing  %}
 
 </head>
@@ -18,6 +18,7 @@
 	</ol>
 	<hr>
 	<!-- 路径导航结束 -->
+	<!-- 条件搜索开始 -->
 	<form class="form-inline col-md-offset-9" method="post">
 		<div class="form-group">
 			<!-- 查找员工 -->
@@ -25,7 +26,15 @@
 		</div>
 		<button type="submit" class="btn btn-primary">搜索</button>
 	</form>
-	</br>
+	<!-- 条件搜索结束 -->
+	<br>
+	<!-- 错误信息开始 -->
+	<div class=" col-sm-offset-2 col-sm-7">
+		<div class="missing"></div>
+		{% include 'missing.html' ignore missing  %}
+	</div>
+	<!-- 错误信息结束 -->
+	<!-- 表格主体开始 -->
 	<div class="container">
 		<div class="row">
 			<table class="table table-bordered table-hover">
@@ -57,11 +66,11 @@
 					{% endfor %}
 				</tbody>
 			</table>
-			<!-- 分页 -->
+			<!-- 引用分页 -->
 			{% include 'page.html' ignore missing  %}
-			<!-- 分页 -->
 		</div>
 	</div>
+	<!-- 表格主体结束 -->
 </body>
 
 </html>

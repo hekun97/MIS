@@ -27,15 +27,7 @@ def show_dp():
             (SELECT COUNT(*) FROM user u WHERE u.dp_id=d.id) AS dp_count
             FROM department d WHERE dp_name LIKE ?
             ''',(dp_name,)
-        )
-        li = []
-        for post in posts:
-            li.append(post)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/department/show.html', list=list, html=html)
+        ).fetchall()
     else:
         db = get_db()
         posts = db.execute(
@@ -46,11 +38,11 @@ def show_dp():
             FROM department d
             '''
         ).fetchall()
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            posts), request.path, request.args, per_page_count=10)
-        list = posts[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/department/show.html', list=list, html=html)
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    list = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('admin/department/show.html', list=list, html=html)
 
 # 添加部门 路由
 @bp.route('/create_dp', methods=('GET', 'POST'))
@@ -64,13 +56,10 @@ def create_dp():
         db = get_db()
         # 添加部门校验
         error = None
-        if not dp_name:
-            error = '请填写部门名称.'
-        elif db.execute(
+        if db.execute(
             'SELECT id FROM department WHERE dp_name = ?', (dp_name,)
         ).fetchone() is not None:
-            error = '部门名称： {} 已经被注册。'.format(dp_name)
-
+            error = '部门名称{}已经被使用！'.format(dp_name)
         if error is None:
             # 将值插入到数据库
             db.execute(
@@ -79,7 +68,8 @@ def create_dp():
             )
             db.commit()
             return redirect(url_for('department.show_dp'))
-        flash(error)
+        else:
+            flash(error)
     return render_template('admin/department/create.html')
 
 # 修改部门 路由
@@ -96,12 +86,10 @@ def update_dp(id):
         db = get_db()
         # 校验
         error = None
-        if not dp_name:
-            error = '请填写部门名称。'
-        elif db.execute(
+        if db.execute(
             'SELECT id FROM department WHERE dp_name = ? AND id != ?', (dp_name,id)
         ).fetchone() is not None:
-            error = '部门名称 {} 已经被注册.'.format(dp_name)
+            error = '部门名称{}已经被使用！'.format(dp_name)
         if error is not None:
             flash(error)
         else:
@@ -121,10 +109,20 @@ def update_dp(id):
 def delete_dp(id):
     # 判断用户权限
     judge(g.user['level'])
-    get_post(id)
+    post=get_post(id)
     db = get_db()
-    db.execute('DELETE FROM department WHERE id = ?', (id,))
-    db.commit()
+    error=None
+    if db.execute(
+        '''
+        SELECT id FROM user WHERE dp_id=?
+        ''',(id,)
+    ).fetchone() is not None:
+        error='删除失败，仍有员工在{}中！'.format(post[1])
+    if error is None:
+        db.execute('DELETE FROM department WHERE id = ?', (id,))
+        db.commit()
+    else:
+        flash(error)
     return redirect(url_for('department.show_dp'))
 
 
@@ -138,5 +136,5 @@ def get_post(id):
     ).fetchone()
 
     if post is None:
-        abort(404, "Post 的 id值 {0} 不存在！".format(id))
+        abort(404, "Post 的 id值{0}不存在！".format(id))
     return post

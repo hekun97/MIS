@@ -8,20 +8,9 @@
     {% include 'link_js.html' ignore missing  %}
     <!-- 导入自适应高度代码 -->
     <script src="{{url_for('static', filename='js/textarea.js')}}"></script>
-    
 </head>
-<style>
-    .bk:focus {
-        outline: none;
-        border: 0px;
-        /*跟进textarea背景颜色来定*/
-    }
-    .bk {
-        background-color: white;
-        border: 0px;
-    }
-</style>
-
+<!-- 导入textarea样式 -->
+{% include 'textarea.html' ignore missing  %}
 <body>
     <!-- 路径导航开始 -->
     <ol class="breadcrumb" style="background-color: white;padding: 20px;position:relative;top:15px;">
@@ -35,7 +24,7 @@
     <div class="jumbotron col-sm-offset-1 col-sm-10" style="background-color:white;">
         {% for post in posts %}
         <h2>{{ post['cp_title'] }}</h2>
-        <textarea class="bk" rows="10" cols="120" readonly>{{ post['cp_body'] }}</textarea>
+        <textarea class="bk" cols="120" readonly>{{ post['cp_body'] }}</textarea>
         <br>
         <p><a class="btn btn-primary btn-lg" href="{{ url_for('company.show_more') }}"
                 role="button">了解更多</a>&nbsp;&nbsp;&nbsp;&nbsp;

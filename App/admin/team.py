@@ -25,15 +25,7 @@ def show_team():
             (SELECT COUNT(*) FROM user u WHERE u.team_id=t.id) AS team_count
             FROM team t WHERE team_name=?
             ''',(team_name,)
-        )
-        li = []
-        for post in posts:
-            li.append(post)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/team/show.html', list=list, html=html)
+        ).fetchall()
     else:
         db = get_db()
         posts = db.execute(
@@ -42,15 +34,12 @@ def show_team():
             (SELECT COUNT(*) FROM user u WHERE u.team_id=t.id) AS team_count
             FROM team t
             '''
-        )
-        li = []
-        for post in posts:
-            li.append(post)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('admin/team/show.html', list=list, html=html)
+        ).fetchall()
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    list = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('admin/team/show.html', list=list, html=html)
 
 # 添加团队 路由
 @bp.route('/create_team', methods=('GET', 'POST'))
@@ -64,13 +53,10 @@ def create_team():
         db = get_db()
         # 添加团队校验
         error = None
-        if not team_name:
-            error = '请填写团队名称.'
-        elif db.execute(
+        if db.execute(
             'SELECT id FROM team WHERE team_name = ?', (team_name,)
         ).fetchone() is not None:
-            error = '团队名称： {} 已经被注册。'.format(team_name)
-
+            error = '团队名称{}已经被使用！'.format(team_name)
         if error is None:
             # 将值插入到数据库
             db.execute(
@@ -79,7 +65,8 @@ def create_team():
             )
             db.commit()
             return redirect(url_for('team.show_team'))
-        flash(error)
+        else:
+            flash(error)
     return render_template('admin/team/create.html')
 
 # 修改员工 路由
@@ -96,12 +83,10 @@ def update_team(id):
         db = get_db()
         # 校验
         error = None
-        if not team_name:
-            error = '请填写团队名称。'
-        elif db.execute(
+        if db.execute(
             'SELECT id FROM team WHERE team_name = ? AND id != ?', (team_name,id)
         ).fetchone() is not None:
-            error = '用户名 {} 已经被注册.'.format(team_name)
+            error = '团队名称{}已经被使用！'.format(team_name)
         if error is not None:
             flash(error)
         else:
@@ -112,7 +97,6 @@ def update_team(id):
             )
             db.commit()
             return redirect(url_for('team.show_team'))
-
     return render_template('admin/team/update.html', post=post)
 
 # 删除团队 蓝图
@@ -121,10 +105,20 @@ def update_team(id):
 def delete_team(id):
     # 判断用户权限
     judge(g.user['level'])
-    get_post(id)
+    post=get_post(id)
     db = get_db()
-    db.execute('DELETE FROM team WHERE id = ?', (id,))
-    db.commit()
+    error=None
+    if db.execute(
+        '''
+        SELECT id FROM user WHERE team_id=?
+        ''',(id,)
+    ).fetchone() is not None:
+        error='删除失败，仍有员工在团队{}中！'.format(post[1])
+    if error is None:
+        db.execute('DELETE FROM team WHERE id = ?', (id,))
+        db.commit()
+    else:
+        flash(error)
     return redirect(url_for('team.show_team'))
 
 
@@ -138,5 +132,5 @@ def get_post(id):
     ).fetchone()
 
     if post is None:
-        abort(404, "Post 的 id值 {0} 不存在！".format(id))
+        abort(404, "Post 的 id值{0}不存在！".format(id))
     return post

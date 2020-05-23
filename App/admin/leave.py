@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from App.auth import login_required
 from App.db import get_db
 from App.page_utils import Pagination
-from App.admin.level_judge import judge
+from App.admin.level_judge import judge, judge2
 bp = Blueprint('leave', __name__)
 
 allow_sql = '''
@@ -72,7 +72,7 @@ def allow():
 
 
 not_allow_sql = '''
-    SELECT * FROM leave WHERE allow_level="未批复"
+    SELECT * FROM leave WHERE (allow_level="未批复" AND username!=?)
 '''
 
 # 未批准请假 路由
@@ -89,20 +89,18 @@ def not_allow():
         if search_name == '按员工姓名搜索':
             posts = db.execute(
                 not_allow_sql +
-                'AND username LIKE ?'+order_by, (
-                    name,)
+                'AND username LIKE ?'+order_by, (g.user['username'], name)
             ).fetchall()
         # 按请假类型搜索
         elif search_name == '按请假类型搜索':
             posts = db.execute(
                 not_allow_sql +
-                'AND leave_name LIKE ?'+order_by, (
-                    name,)
+                'AND leave_name LIKE ?'+order_by, (g.user['username'],name)
             ).fetchall()
     else:
         db = get_db()
         posts = db.execute(
-            not_allow_sql+order_by
+            not_allow_sql+order_by,(g.user['username'],)
         ).fetchall()
     # 分页
     pager_obj = Pagination(request.args.get("page", 1), len(
@@ -112,13 +110,14 @@ def not_allow():
     return render_template('admin/leave/not_allow.html',  posts=posts, html=html)
 
 
-# 请假操作 路由
+# 批复请假操作 路由
 @bp.route('/<int:id>/not_allow_describe', methods=('GET', 'POST'))
 @login_required
 def not_allow_describe(id):
     # 判断用户权限
     judge(g.user['level'])
     post = get_post(id)
+    judge2(g.user['username'],post[1])
     if request.method == 'POST':
         allow_name = g.user['username']
         allow_level = request.form['allow_level']

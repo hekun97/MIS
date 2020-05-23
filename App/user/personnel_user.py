@@ -27,6 +27,15 @@ def show_user():
     )
     return render_template('user/personnel/show.html', posts=posts)
 
+
+sql = '''
+    SELECT u.id,u.username,u.sex,u.email,u.tel,
+    (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
+    (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
+    (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
+    FROM user u
+    '''
+
 # 修改当前员工 路由
 @bp.route('/<int:id>/update_user', methods=('GET', 'POST'))
 @login_required
@@ -58,7 +67,8 @@ def update(id):
             db.execute(
                 'UPDATE user SET username = ?, password = ?,sex=?,birthday=?,email=?,tel=?'
                 ' WHERE id = ?',
-                (username, password, sex, birthday, email, tel, id)
+                (username, generate_password_hash(
+                    password), sex, birthday, email, tel, id)
             )
             db.commit()
             return redirect(url_for('personnel_user.show_user'))
@@ -74,103 +84,53 @@ def show_all():
         db = get_db()
         if search_name == '按姓名搜索':
             posts = db.execute(
+                sql +
                 '''
-                SELECT u.id,u.username,u.sex,u.email,u.tel,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE u.username LIKE ?
+                WHERE u.username LIKE ?
                 ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/personnel/show_all.html', list=list, html=html)
+            ).fetchall()
         elif search_name == '按性别搜索':
             posts = db.execute(
+                sql +
                 '''
-                SELECT u.id,u.username,u.sex,u.email,u.tel,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE u.sex LIKE ?
+                WHERE u.sex LIKE ?
                 ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/personnel/show_all.html', list=list, html=html)
+            ).fetchall()
         elif search_name == '按职位搜索':
             posts = db.execute(
+                sql +
                 '''
-                SELECT u.id,u.username,u.sex,u.email,u.tel,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE p_name LIKE ?
+                WHERE p_name LIKE ?
                 ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/personnel/show_all.html', list=list, html=html)
+            ).fetchall()
         elif search_name == '按所属团队搜索':
             posts = db.execute(
+                sql +
                 '''
-                SELECT u.id,u.username,u.sex,u.email,u.tel,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE t_name LIKE ?
+                WHERE t_name LIKE ?
                 ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/personnel/show_all.html', list=list, html=html)
+            ).fetchall()
         elif search_name == '按所属部门搜索':
             posts = db.execute(
+                sql +
                 '''
-                SELECT u.id,u.username,u.sex,u.email,u.tel,
-                (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-                (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-                (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-                FROM user u WHERE d_name LIKE ?
+                WHERE d_name LIKE ?
                 ''', (name,)
-            )
-            li = page_same(posts)
-            pager_obj = Pagination(request.args.get("page", 1), len(
-                li), request.path, request.args, per_page_count=10)
-            list = li[pager_obj.start:pager_obj.end]
-            html = pager_obj.page_html()
-            return render_template('user/personnel/show_all.html', list=list, html=html)
+            ).fetchall()
     else:
         db = get_db()
         posts = db.execute(
-            '''
-            SELECT u.id,u.username,u.sex,u.email,u.tel,
-            (SELECT t.team_name FROM team t WHERE u.team_id = t.id) AS t_name,
-            (SELECT d.dp_name FROM department d WHERE u.dp_id = d.id) AS d_name,
-            (SELECT p.pt_name FROM position p WHERE u.pt_id = p.id) AS p_name          
-            FROM user u
-            '''
-        )
-        li = page_same(posts)
-        pager_obj = Pagination(request.args.get("page", 1), len(
-            li), request.path, request.args, per_page_count=10)
-        list = li[pager_obj.start:pager_obj.end]
-        html = pager_obj.page_html()
-        return render_template('user/personnel/show_all.html', list=list, html=html)
+            sql
+        ).fetchall()
+    pager_obj = Pagination(request.args.get("page", 1), len(
+        posts), request.path, request.args, per_page_count=10)
+    list = posts[pager_obj.start:pager_obj.end]
+    html = pager_obj.page_html()
+    return render_template('user/personnel/show_all.html', list=list, html=html)
 
 # 根据id值拿到相应的数据
+
+
 def get_post(id):
     post = get_db().execute(
         'SELECT *'

@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from App.auth import login_required
 from App.db import get_db
 from App.page_utils import Pagination
-from App.admin.level_judge import judge
+from App.admin.level_judge import judge, judge3
 
 bp = Blueprint('company', __name__)
 sql = '''SELECT * FROM company'''
@@ -42,28 +42,13 @@ def update_home(id):
         cp_title = request.form['cp_title']
         cp_body = request.form['cp_body']
         db = get_db()
-        # 校验
-        error = None
-        if not cp_title:
-            error = '请填写主页信息名称。'
-        elif db.execute(
-            sql +
-            '''
-            WHERE cp_title = ? AND id != ?
-            ''', (
-                cp_title, id)
-        ).fetchone() is not None:
-            error = '主页信息名称 {} 已经被使用.'.format(cp_title)
-        if error is not None:
-            flash(error)
-        else:
-            db.execute(
-                'UPDATE company SET cp_title = ?, cp_body = ?'
-                ' WHERE id = ?',
-                (cp_title, cp_body, id)
-            )
-            db.commit()
-            return redirect(url_for('company.home'))
+        db.execute(
+            'UPDATE company SET cp_title = ?, cp_body = ?'
+            ' WHERE id = ?',
+            (cp_title, cp_body, id)
+        )
+        db.commit()
+        return redirect(url_for('company.home'))
     return render_template('admin/home/update.html', post=post)
 
 # 展示更多信息 路由
@@ -74,7 +59,6 @@ def show_more():
     judge(g.user['level'])
     db = get_db()
     posts = db.execute(
-        # 使用count()函数计算人数
         sql +
         '''
         WHERE cp_level='更多信息'
@@ -94,28 +78,13 @@ def update_more(id):
         cp_title = request.form['cp_title']
         cp_body = request.form['cp_body']
         db = get_db()
-        # 校验
-        error = None
-        if not cp_title:
-            error = '请填写更多信息名称。'
-        elif db.execute(
-            sql +
-            '''
-            WHERE cp_title = ? AND id != ?
-            ''', (
-                cp_title, id)
-        ).fetchone() is not None:
-            error = '更多信息名称 {} 已经被使用.'.format(cp_title)
-        if error is not None:
-            flash(error)
-        else:
-            db.execute(
-                'UPDATE company SET cp_title = ?, cp_body = ?'
-                ' WHERE id = ?',
-                (cp_title, cp_body, id)
-            )
-            db.commit()
-            return redirect(url_for('company.show_more'))
+        db.execute(
+            'UPDATE company SET cp_title = ?, cp_body = ?'
+            ' WHERE id = ?',
+            (cp_title, cp_body, id)
+        )
+        db.commit()
+        return redirect(url_for('company.show_more'))
     return render_template('admin/home/update_more.html', post=post)
 
 
@@ -141,14 +110,6 @@ def notice():
                 nt_sql +
                 '''
                 AND cp_title LIKE ?
-                ORDER BY cp_created DESC
-                ''', (name,)
-            ).fetchall()
-        if search_name=='按发布人搜索':
-            posts = db.execute(
-                nt_sql +
-                '''
-                AND username LIKE ?
                 ORDER BY cp_created DESC
                 ''', (name,)
             ).fetchall()
@@ -186,7 +147,7 @@ def show_more_notice(id):
         nt_sql +
         '''
         AND  c.id=?
-        ''',(id,)
+        ''', (id,)
     ).fetchall()
     return render_template('admin/notice/show_more.html', posts=posts)
 
@@ -201,15 +162,15 @@ def create_notice():
         cp_title = request.form['cp_title']
         cp_body = request.form['cp_body']
         author_id = g.user['id']
-        # 校验                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+        # 校验
         error = None
         if db.execute(
             sql +
             '''
             WHERE cp_title = ? 
             ''', (cp_title,)
-        ).fetchone() is not None:   
-            error = '通知信息名称 {} 已经被使用！'.format(cp_title)
+        ).fetchone() is not None:
+            error = '通知信息名称{}已经被使用！'.format(cp_title)
         if error is not None:
             flash(error)
             return redirect(url_for('company.create_notice'))
@@ -234,6 +195,7 @@ def update_notice(id):
     # 拿到数据库中的值
     db = get_db()
     post = get_post(id)
+    judge3(g.user['id'], post[4])
     if request.method == 'POST':
         cp_title = request.form['cp_title']
         cp_body = request.form['cp_body']
@@ -246,7 +208,7 @@ def update_notice(id):
             WHERE cp_title = ? AND id != ?
             ''', (cp_title, id)
         ).fetchone() is not None:
-            error = '通知信息名称 {} 已经被使用！'.format(cp_title)
+            error = '通知信息名称{}已经被使用！'.format(cp_title)
         if error is not None:
             flash(error)
         else:
@@ -272,6 +234,8 @@ def delete_notice(id):
     return redirect(url_for('company.notice'))
 
 # 根据id值拿到相应的数据
+
+
 def get_post(id):
     post = get_db().execute(
         'SELECT *'
@@ -281,5 +245,5 @@ def get_post(id):
     ).fetchone()
 
     if post is None:
-        abort(404, "Post 的 id值 {0} 不存在！".format(id))
+        abort(404, "Post 的 id值{0}不存在！".format(id))
     return post
